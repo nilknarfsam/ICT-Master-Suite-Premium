@@ -1,0 +1,29 @@
+# ICT Master Suite Premium
+
+Versao premium em evolucao do projeto legado `finder_logs`, com foco em logs ICT/TRI/Agilent e arquitetura modular para crescimento seguro.
+
+## Objetivo desta fase
+
+Esta etapa prepara a base profissional do novo projeto, sem alterar a logica interna existente e sem impactar o sistema atual em producao.
+
+## Regras da migracao atual
+
+- Nao altera nada em `C:\finder_logs`.
+- Mantem copia de referencia dos arquivos principais em `legacy/finder_logs_original`.
+- Foco exclusivo em aplicativo de logs ICT/TRI/Agilent.
+- Sem implementacao de hardware, firmware, Arduino, ESP32 ou MQTT nesta fase.
+
+## Estrutura inicial
+
+O projeto foi organizado para suportar modularizacao progressiva:
+
+- `legacy/`: referencia do sistema atual.
+- `src/app_desktop/`: camada de interface desktop.
+- `src/core/`: regras de negocio por dominio.
+- `src/infrastructure/`: persistencia e adaptadores tecnicos.
+- `src/shared/`: utilitarios compartilhados.
+- `tests/`, `docs/`, `scripts/`, `tools/`: suporte de qualidade, documentacao e automacao.
+
+## Escopo do momento
+
+Esta versao contem somente preparacao estrutural para o primeiro ciclo de commits da Premium.

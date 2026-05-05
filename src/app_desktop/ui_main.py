@@ -18,11 +18,11 @@ from PyQt5.QtCore import Qt, QTimer, QDir
 from PyQt5.QtGui import QColor, QFont, QIcon
 from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryAxis, QValueAxis, QPieSeries, QPieSlice
 
-from src.app_desktop.legacy_facade import (verificar_conexao_db)
 from src.core.config.config_service import carregar_config, salvar_config
 from src.core.config.cache_service import limpar_cache_local
 from src.application.services.log_search_service import LogSearchService
 from src.application.services.log_analysis_service import LogAnalysisService
+from src.application.services.database_application_service import DatabaseApplicationService
 from src.application.services.wiki_service import WikiService
 from src.application.services.auth_application_service import AuthApplicationService
 from src.application.services.report_application_service import ReportApplicationService
@@ -195,6 +195,7 @@ class MainApp(QWidget):
         self._last_purge_date = None
         self.log_search_service = LogSearchService()
         self.log_analysis_service = LogAnalysisService()
+        self.database_service = DatabaseApplicationService()
         self.wiki_service = WikiService()
         self.auth_service = AuthApplicationService()
         self.report_service = ReportApplicationService()
@@ -672,7 +673,7 @@ class MainApp(QWidget):
 
     def salvar_edicao_historico(self):
         if not self.requerer_login(): return
-        if not verificar_conexao_db():
+        if not self.database_service.verificar_conexao_db():
             QMessageBox.critical(self, "Rede Offline", "O banco de dados na rede está inacessível.\n\n- Verifique sua conexão com a internet/rede da empresa.\n- Certifique-se de que o servidor de arquivos está online.\n\nTente novamente em alguns instantes.")
             return
 
@@ -715,7 +716,7 @@ class MainApp(QWidget):
 
     def limpar_historico_local(self):
         """Limpa o cache de logs locais e reseta as análises no banco de dados."""
-        if not verificar_conexao_db():
+        if not self.database_service.verificar_conexao_db():
             QMessageBox.critical(self, "Rede Offline", "O banco de dados na rede está inacessível.\n\nA limpeza de histórico não pode prosseguir sem acesso ao banco de dados.")
             return
 
@@ -1358,7 +1359,7 @@ class MainApp(QWidget):
     def salvar_analise_tecnico(self):
         """Salva o texto de análise do técnico no banco de dados."""
         if not self.requerer_login(): return
-        if not verificar_conexao_db():
+        if not self.database_service.verificar_conexao_db():
             QMessageBox.critical(self, "Rede Offline", "O banco de dados na rede está inacessível.\n\n- Verifique sua conexão com a internet/rede da empresa.\n- Certifique-se de que o servidor de arquivos está online.\n\nTente novamente em alguns instantes.")
             return
 

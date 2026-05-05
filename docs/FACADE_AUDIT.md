@@ -4,14 +4,14 @@
 
 Funções/constantes da `legacy_facade` que ainda aparecem em uso na base ativa:
 
-- `verificar_conexao_db`
+- `verificar_conexao_db` (parcialmente migrado para `DatabaseApplicationService`)
 - `CONFIG_FILE` (uso removido de `updater.py`; ainda exposto na facade por compatibilidade)
 
 Observacao: `src/app_desktop/ui_main.py` ainda importa `salvar_observacao`, `ler_observacao` e `obter_ultimas_analises` via facade, mas os fluxos principais de analise ja foram migrados para `LogAnalysisService`.
 
 ## Onde estão sendo usadas
 
-- `verificar_conexao_db` — `src/app_desktop/ui_main.py` (linhas ~22, ~676, ~719, ~1362) — contexto: validacao de conectividade antes de operacoes sensiveis.
+- `verificar_conexao_db` — `src/app_desktop/ui_main.py` (via `DatabaseApplicationService`) — contexto: validacao de conectividade antes de operacoes sensiveis.
 
 Referencias estruturais da facade:
 
@@ -29,6 +29,7 @@ Referencias estruturais da facade:
 - auth (OK)
 - relatórios (OK)
 - sync (OK)
+- database checks (PARCIAL: UI desktop migrada para `DatabaseApplicationService`)
 - falhas/análises remanescentes (OK)
 
 ## Status da migração de Config
@@ -41,7 +42,7 @@ Referencias estruturais da facade:
 
 ### Alta prioridade
 
-- `verificar_conexao_db` (pode ser encapsulado em service de diagnostico/conectividade).
+- restante de helpers de banco ainda expostos via `legacy_facade` para compatibilidade (`conectar_banco`, `init_db`, `bootstrap_database`, `verificar_conexao_db`).
 
 ### Média prioridade
 

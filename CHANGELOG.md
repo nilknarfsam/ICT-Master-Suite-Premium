@@ -9,6 +9,8 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada base desktop premium executavel em `src/app_desktop`.
 - Adicionados smoke checks de desenvolvimento (`scripts/smoke_check.py` e `scripts/dev_check.bat`).
 - Adicionada documentacao de validacao operacional (`docs/SMOKE_TEST_DESKTOP.md`).
+- Testes de parser TRI e Agilent adicionados.
+- Testes basicos do core adicionados.
 
 ## [0.1.0] - 2026-04-28
 

@@ -42,6 +42,15 @@ A primeira integracao gradual foi aplicada em `src/app_desktop/ui_main.py` apena
 
 O restante do fluxo de busca foi mantido sem alteracoes para preservar comportamento atual e reduzir risco de regressao.
 
+## Parsing de logs migrado para Application Service
+
+No carregamento de arquivos em `src/app_desktop/threads.py`, o parsing de metadata passou a usar `LogAnalysisService`.
+
+- antes: chamada direta de `parse_metadata_inteligente`
+- agora: `LogAnalysisService.parse_log_metadata(...)`
+
+Essa mudanca foi feita apenas no ponto de parsing, sem alterar fluxo de thread, estrutura de retorno ou comportamento funcional.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

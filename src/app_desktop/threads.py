@@ -8,11 +8,11 @@ from PyQt5.QtCore import QThread, pyqtSignal
 # Funções migradas para o banco de dados SQLite
 from src.app_desktop.legacy_facade import (
     detectar_tipo_log,
-    parse_metadata_inteligente,
     obter_estatisticas_ict,
     salvar_falha_db,
     init_db
 )
+from src.application.services.log_analysis_service import LogAnalysisService
 
 def _wait_file_stable(path, retries=6, delay=0.35):
     """Aguarda o tamanho de um arquivo se estabilizar."""
@@ -114,6 +114,7 @@ class FileLoaderThread(QThread):
         self.caminho = caminho
         self.nome = nome
         self.backup_dir = backup_dir
+        self.log_analysis_service = LogAnalysisService()
 
     def run(self):
         try:
@@ -121,7 +122,11 @@ class FileLoaderThread(QThread):
             # Blindagem de encodings e permissões: utf-8 com perdas controladas (ignore)
             with open(self.caminho, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
-            meta = parse_metadata_inteligente(self.caminho, self.nome, content)
+            meta = self.log_analysis_service.parse_log_metadata(
+                self.caminho,
+                self.nome,
+                content
+            )
             self.file_loaded.emit(meta, content)
         except PermissionError:
             self.file_load_error.emit("Acesso negado: O arquivo está sendo gravado pelo verificador (Agilent/TRI) ou bloqueado pelo Windows.")

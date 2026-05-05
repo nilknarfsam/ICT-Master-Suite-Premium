@@ -1,0 +1,9 @@
+{
+    "caminho_logs_tri": "//147.1.0.95/teste_ict/ict02",
+    "caminho_logs_agilent": "//147.1.0.95/teste_ict/ict01/defeitos",
+    "backup_local_dir": "C:/projetos/ICT-Master-Suite-Premium/src/core/config/backup_local",
+    "caminho_update_rede": "//147.1.0.95/teste_ict/app_updates",
+    "caminho_banco_rede": "//147.1.0.95/teste_ict/banco_dados_falhas.db",
+    "auto_start_windows": false,
+    "dias_retencao_cache": 30
+}

@@ -39,3 +39,19 @@ Opcionalmente, use o runner:
 - `python run_desktop.py`
 
 Observacao: `legacy/finder_logs_original` permanece como referencia congelada. A base ativa de execucao da Premium fica em `src/app_desktop`.
+
+## Validacao de desenvolvimento
+
+Para validar rapidamente a base desktop premium:
+
+- `scripts\dev_check.bat`
+
+O script executa:
+
+- `python -m compileall src`
+- `python scripts/smoke_check.py`
+- `python -m pytest tests/test_legacy_facade_imports.py tests/test_desktop_imports.py`
+
+Para validacao manual operacional, use o checklist:
+
+- `docs/SMOKE_TEST_DESKTOP.md`

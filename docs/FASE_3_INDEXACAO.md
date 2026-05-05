@@ -57,6 +57,20 @@ No service:
   - `indexed`
   - `errors`
 
+## Application Service de indexacao
+
+Foi adicionada uma ponte de aplicacao em `src/application/services/log_index_application_service.py` para encapsular acesso ao motor de indexacao do core.
+
+API exposta:
+
+- `build_incremental_index(base_path, allowed_extensions=None)`
+- `index_file(path)`
+- `search(term)`
+- `is_index_available()`
+- `count_entries()`
+
+Observacao: essa camada ainda nao foi conectada na UI nem no fluxo principal de busca.
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

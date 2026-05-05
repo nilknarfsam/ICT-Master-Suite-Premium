@@ -36,6 +36,9 @@ class LogIndexService:
         except Exception:
             return False
 
+    def count_entries(self):
+        return self.repository.count_entries()
+
     def index_file(self, path):
         if not path or not os.path.isfile(path):
             return False

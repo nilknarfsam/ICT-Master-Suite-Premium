@@ -17,6 +17,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - UI desktop passou a usar LogSearchService para normalizacao e validacao do termo de busca.
 - Parsing de metadata agora usa LogAnalysisService.
 - Salvamento de analise agora usa LogAnalysisService.
+- Leitura de analise agora usa LogAnalysisService.
 
 ## [0.1.0] - 2026-04-28
 

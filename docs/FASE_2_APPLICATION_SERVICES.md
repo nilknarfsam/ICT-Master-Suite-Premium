@@ -60,6 +60,15 @@ No fluxo de UI em `src/app_desktop/ui_main.py`, o salvamento de observacoes/anal
 
 A mudanca manteve mensagens da UI, tratamento de erro e comportamento funcional inalterados.
 
+## Leitura de analise migrada para Application Service
+
+No fluxo de UI em `src/app_desktop/ui_main.py`, a leitura de observacoes/analises passou a usar `LogAnalysisService`.
+
+- antes: chamada direta de `ler_observacao(...)`
+- agora: `LogAnalysisService.read_analysis(...)`
+
+Essa alteracao manteve retorno, tratamento de excecao e comportamento visual inalterados.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

@@ -660,7 +660,7 @@ class MainApp(QWidget):
 
             # Carrega a observação do banco de dados
             file_name = os.path.basename(file_path)
-            observacao = ler_observacao(file_name)
+            observacao = self.log_analysis_service.read_analysis(file_name)
             self.txt_history_chat.setPlainText(observacao)
 
 
@@ -693,7 +693,7 @@ class MainApp(QWidget):
             self.status_bar.setText("Aviso: Modo Offline.")
         elif resultado:
             self.txt_history_obs.clear()
-            self.txt_history_chat.setPlainText(ler_observacao(file_name))
+            self.txt_history_chat.setPlainText(self.log_analysis_service.read_analysis(file_name))
             QMessageBox.information(self, "Sucesso", "Análise atualizada com sucesso!")
         else:
             QMessageBox.critical(self, "Erro no Banco de Dados", "Não foi possível salvar a análise. O banco de dados pode estar bloqueado por outro usuário. Tente novamente.")
@@ -1180,7 +1180,7 @@ class MainApp(QWidget):
             self.status_bar.setText("Arquivo carregado (sem novas falhas para registrar).")
             
         # Carrega a observação existente, se houver
-        obs_existente = ler_observacao(self.current_file_name)
+        obs_existente = self.log_analysis_service.read_analysis(self.current_file_name)
         self.txt_historico_chat.setPlainText(obs_existente)
         
         # Verifica histórico colaborativo da placa
@@ -1374,7 +1374,7 @@ class MainApp(QWidget):
             self.status_bar.setText("Aviso: Modo Offline.")
         elif resultado:
             self.txt_observacao.clear()
-            self.txt_historico_chat.setPlainText(ler_observacao(self.current_file_name))
+            self.txt_historico_chat.setPlainText(self.log_analysis_service.read_analysis(self.current_file_name))
             QMessageBox.information(self, "Sucesso", "Observação salva com sucesso no banco de dados.")
             self.status_bar.setText("Observação salva.")
         else:

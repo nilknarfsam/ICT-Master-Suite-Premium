@@ -42,6 +42,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Status bar agora informa se busca veio do indice ou scanner.
 - Criado log mestre de evolucao tecnica do projeto.
 - Adicionada reindexacao completa manual de logs.
+- Adicionado worker de reindexacao em background para futura integracao na UI.
 
 ## [0.1.0] - 2026-04-28
 

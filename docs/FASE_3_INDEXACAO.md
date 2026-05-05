@@ -153,6 +153,26 @@ No script CLI:
 
 Esse fluxo permanece manual e nao e executado automaticamente ao abrir o app.
 
+## Worker de reindexacao em background
+
+Foi adicionado um worker `ReindexThread` em `src/app_desktop/threads.py` para suportar reindexacao futura pela UI sem travar interface.
+
+Contrato atual:
+
+- sinais:
+  - `progress_msg`
+  - `finished_summary`
+  - `failed`
+- modos:
+  - `rebuild=True`: usa `rebuild_index(...)`
+  - `rebuild=False`: executa indexacao incremental por path e acumula resumo
+- mensagens de progresso:
+  - `Iniciando reindexação...`
+  - `Processando: {path}`
+  - `Reindexação concluída.`
+
+Observacao: o worker foi apenas preparado e ainda nao esta conectado a botoes/fluxo automatico da UI.
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

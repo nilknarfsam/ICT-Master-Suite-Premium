@@ -5,6 +5,7 @@ from datetime import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from src.application.services.log_analysis_service import LogAnalysisService
+from src.application.services.log_index_application_service import LogIndexApplicationService
 from src.application.services.log_search_service import LogSearchService
 
 def _wait_file_stable(path, retries=6, delay=0.35):
@@ -191,3 +192,50 @@ class DashboardThread(QThread):
     def run(self):
         stats = self.log_analysis_service.get_ict_statistics()
         self.stats_updated.emit(stats)
+
+
+class ReindexThread(QThread):
+    progress_msg = pyqtSignal(str)
+    finished_summary = pyqtSignal(dict)
+    failed = pyqtSignal(str)
+
+    def __init__(self, base_paths, rebuild=True, allowed_extensions=None, parent=None):
+        super().__init__(parent)
+        self.base_paths = base_paths or []
+        self.rebuild = rebuild
+        self.allowed_extensions = allowed_extensions
+        self.log_index_service = LogIndexApplicationService()
+
+    def run(self):
+        try:
+            self.progress_msg.emit("Iniciando reindexação...")
+            paths = [p for p in self.base_paths if p]
+
+            if self.rebuild:
+                for path in paths:
+                    self.progress_msg.emit(f"Processando: {path}")
+                summary = self.log_index_service.rebuild_index(
+                    paths,
+                    allowed_extensions=self.allowed_extensions,
+                )
+            else:
+                total_indexed = 0
+                total_errors = 0
+                for path in paths:
+                    self.progress_msg.emit(f"Processando: {path}")
+                    result = self.log_index_service.build_incremental_index(
+                        path,
+                        allowed_extensions=self.allowed_extensions,
+                    )
+                    total_indexed += result.get("indexed", 0)
+                    total_errors += result.get("errors", 0)
+                summary = {
+                    "paths": paths,
+                    "total_indexed": total_indexed,
+                    "total_errors": total_errors,
+                }
+
+            self.progress_msg.emit("Reindexação concluída.")
+            self.finished_summary.emit(summary)
+        except Exception as e:
+            self.failed.emit(str(e))

@@ -196,3 +196,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: `tests/scripts/test_rebuild_index.py` + validacao geral por `dev_check` e `pytest`.
 - Observacoes: indexacao controlada e segura, sem execucao automatica no app.
 - Proximo passo: integracao opcional na UI.
+
+### [2026-05-05] — [Fase 3.14A] — Worker de reindexacao em background
+- Objetivo: preparar reindexacao futura pela UI sem travar interface.
+- Prompt aplicado/resumo: criacao de `ReindexThread` com sinais de progresso, conclusao e falha, suportando modo rebuild e incremental.
+- Arquivos principais: `src/app_desktop/threads.py`, `tests/application/test_reindex_thread_contract.py`.
+- Commit: pendente (a preencher apos commit do lote atual).
+- Testes/validacao: teste de contrato com `pytest.importorskip("PyQt5")`.
+- Observacoes: sem botao novo e sem execucao automatica no startup.
+- Proximo passo: integrar opcionalmente o worker em acao manual da UI.

@@ -1,8 +1,12 @@
 from src.application.dtos.search_options import SearchOptions
+from src.application.services.log_index_application_service import LogIndexApplicationService
 
 
 class LogSearchService:
     """Serviço de aplicação para futuras orquestrações de busca de logs."""
+    def __init__(self, log_index_application_service=None):
+        self.log_index_application_service = log_index_application_service or LogIndexApplicationService()
+
 
     def normalize_search_term(self, term: str) -> str:
         return (term or "").strip().lower()
@@ -46,3 +50,18 @@ class LogSearchService:
                 "Refine a busca para ver menos resultados."
             )
         return f"{total_exibido} arquivos encontrados."
+
+    def is_index_ready(self) -> bool:
+        return self.log_index_application_service.is_index_available()
+
+    def search_with_index(self, term: str, options: SearchOptions):
+        if not self.is_index_ready():
+            return None
+
+        indexed_results = self.log_index_application_service.search(term)
+        filtered = [
+            item
+            for item in indexed_results
+            if self.should_include_file(item[0], term, options)
+        ]
+        return self.limit_results(filtered, options)

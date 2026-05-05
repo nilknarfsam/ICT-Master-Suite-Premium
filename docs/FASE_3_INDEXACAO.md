@@ -91,6 +91,19 @@ Exemplos de uso:
 - `python scripts/build_log_index.py`
 - `python scripts/build_log_index.py "\\servidor\logs\tri" "\\servidor\logs\agilent"`
 
+## Busca hibrida (index + fallback)
+
+Foi adicionada base no `LogSearchService` para tentativa de busca via indice local antes de cair no scanner tradicional.
+
+Comportamento atual:
+
+- `is_index_ready()` verifica disponibilidade do indice via `LogIndexApplicationService`
+- `search_with_index(term, options)`:
+  - quando indice esta disponivel, consulta indice, aplica `should_include_file(...)` e `limit_results(...)`
+  - quando indice nao esta disponivel, retorna `None` para fallback seguro no scanner atual
+
+Observacao: nesta etapa, a busca hibrida ainda nao foi conectada no fluxo real das threads.
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

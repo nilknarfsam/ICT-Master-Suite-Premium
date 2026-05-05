@@ -5,6 +5,7 @@
 - Organizar o codigo legado em modulos de dominio.
 - Definir contratos entre UI, regras e infraestrutura.
 - Reduzir acoplamento mantendo comportamento atual.
+- Criar facade temporaria de compatibilidade (`src/app_desktop/legacy_facade.py`) para migracao gradual da UI antiga.
 
 ## Fase 2 - Separacao UI / Core
 

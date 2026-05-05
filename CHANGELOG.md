@@ -30,6 +30,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Checkpoint da Fase 2 documentado.
 - Adicionadas opcoes de busca de logs para futura otimizacao de performance.
 - Scanner de logs passou a usar LogSearchService para filtro de arquivos.
+- Scanner preparado com limite inicial de resultados para reduzir carga em buscas extensas.
 
 ## [0.1.0] - 2026-04-28
 

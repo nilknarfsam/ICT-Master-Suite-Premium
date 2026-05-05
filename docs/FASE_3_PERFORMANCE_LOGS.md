@@ -48,6 +48,20 @@ Garantias mantidas nesta integracao:
 - mesma ordenacao final por data e formato de retorno para a UI
 - mesmo tratamento de erros de permissao/IO durante varredura
 
+## Limite inicial de resultados
+
+Para reduzir carga em buscas extensas na rede, o scanner aplica um limite interno de resultados apos a ordenacao por data.
+
+Detalhes atuais:
+
+- padrao: `500` resultados (via `SearchOptions.max_results`)
+- aplicacao: no fluxo do scanner, antes da emissao para UI
+- previsibilidade: limite centralizado em `LogSearchService.limit_results(...)`
+
+Observacao de evolucao:
+
+- este valor pode ser exposto futuramente como opcao configuravel na UI, mantendo fallback seguro no service
+
 ## Proximos passos
 
 1. Integrar `SearchOptions` ao fluxo de busca em `threads.py` sem alterar UX.

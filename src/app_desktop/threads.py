@@ -84,6 +84,7 @@ class BuscaThread(QThread):
         if self.rodando:
             # Ordena por data (mais recente primeiro)
             encontrados.sort(key=lambda x: x[0], reverse=True)
+            encontrados = self.log_search_service.limit_results(encontrados, self.search_options)
             # Retorna lista de tuplas (nome, caminho) para a UI
             self.lista_arquivos.emit([(x[1], x[2]) for x in encontrados])
 

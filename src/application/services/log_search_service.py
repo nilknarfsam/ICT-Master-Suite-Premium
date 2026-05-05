@@ -28,3 +28,7 @@ class LogSearchService:
                 return False
 
         return True
+
+    def limit_results(self, results, options: SearchOptions):
+        max_results = max(0, int(options.max_results))
+        return results[:max_results]

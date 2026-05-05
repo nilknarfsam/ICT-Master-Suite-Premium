@@ -12,6 +12,7 @@
 - Isolar camada de interface desktop da camada de negocio.
 - Padronizar servicos de aplicacao para operacoes de logs.
 - Preparar testes unitarios para servicos centrais.
+- Application Services Layer criada.
 
 ## Fase 3 - API local opcional
 

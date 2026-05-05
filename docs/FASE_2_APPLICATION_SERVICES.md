@@ -1,0 +1,39 @@
+# Fase 2 - Application Services Layer
+
+## Papel da camada application
+
+A camada `application` organiza casos de uso do sistema em servicos orientados a fluxo de negocio de alto nivel. Ela reduz a dependencia da UI em funcoes soltas e cria um ponto unico de orquestracao.
+
+## Diferenca entre core e application
+
+- `core`: regras de dominio e operacoes tecnicas ja extraidas do legado (parsers, repositorios, auth, relatorios).
+- `application`: coordena chamadas do `core`, padroniza entradas/saidas e prepara contrato para UI desktop atual e futuras interfaces.
+
+## Por que isso ajuda a futura UI moderna
+
+- Diminui acoplamento da interface com detalhes internos.
+- Facilita troca de camada de apresentacao no futuro (ex.: React/Electron) sem reescrever regras centrais.
+- Permite testes mais focados em caso de uso, com mocks simples.
+
+## Servicos criados
+
+- `LogSearchService` (`src/application/services/log_search_service.py`)
+- `LogAnalysisService` (`src/application/services/log_analysis_service.py`)
+- `WikiService` (`src/application/services/wiki_service.py`)
+- `AuthApplicationService` (`src/application/services/auth_application_service.py`)
+- `ReportApplicationService` (`src/application/services/report_application_service.py`)
+
+## DTOs criados
+
+- `LogSearchResult`
+- `LogMetadata`
+- `FailureRecordInput`
+- `AnalysisNoteInput`
+
+Arquivo: `src/application/dtos/log_dtos.py`
+
+## Proximos passos
+
+- Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.
+- Adicionar testes de application para `wiki`, `auth` e `report`.
+- Evoluir contratos de DTOs conforme necessidade de fluxos da UI.

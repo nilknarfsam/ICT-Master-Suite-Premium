@@ -11,6 +11,9 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada documentacao de validacao operacional (`docs/SMOKE_TEST_DESKTOP.md`).
 - Testes de parser TRI e Agilent adicionados.
 - Testes basicos do core adicionados.
+- Adicionada camada application services.
+- Adicionados DTOs de aplicacao.
+- Adicionados testes de servicos de aplicacao.
 
 ## [0.1.0] - 2026-04-28
 

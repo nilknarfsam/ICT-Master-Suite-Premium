@@ -76,6 +76,36 @@ class BuscaThread(QThread):
     def run(self):
         self.status_msg.emit("Iniciando varredura (Filtro: Apenas Falhas)...")
         encontrados = []
+        resultados_index = None
+
+        try:
+            resultados_index = self.log_search_service.search_with_index(
+                self.termo,
+                self.search_options,
+            )
+        except Exception:
+            resultados_index = None
+
+        if self.rodando and resultados_index is not None:
+            resultados_convertidos = []
+            for item in resultados_index:
+                if not item or len(item) < 2:
+                    continue
+                resultados_convertidos.append((item[0], item[1]))
+
+            total_original = len(resultados_convertidos)
+            total_limitado = len(resultados_convertidos)
+            self.was_limited = False
+            self.lista_arquivos.emit(resultados_convertidos)
+            self.search_summary.emit(
+                {
+                    "total_original": total_original,
+                    "total_exibido": total_limitado,
+                    "limitado": self.was_limited,
+                    "max_results": self.search_options.max_results,
+                }
+            )
+            return
         
         for diretorio in self.diretorios:
             if not self.rodando: break

@@ -38,6 +38,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada camada application para indexacao local de logs.
 - Adicionado script manual para construir indice local de logs.
 - Adicionada base para busca hibrida usando indice local.
+- Busca de logs agora usa indice local quando disponivel com fallback automatico.
 
 ## [0.1.0] - 2026-04-28
 

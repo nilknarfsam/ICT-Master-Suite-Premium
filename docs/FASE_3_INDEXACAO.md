@@ -104,6 +104,22 @@ Comportamento atual:
 
 Observacao: nesta etapa, a busca hibrida ainda nao foi conectada no fluxo real das threads.
 
+## Busca hibrida ativada na thread
+
+A `BuscaThread` agora tenta usar o indice local primeiro e faz fallback automatico para o scanner tradicional quando necessario.
+
+Fluxo aplicado:
+
+- tenta `search_with_index(...)` com `try/except`
+- se retornar `None` (indice indisponivel/erro), executa scanner atual sem alteracoes
+- se retornar lista (mesmo vazia), usa resultado do indice e nao roda scanner
+- converte resultado para formato esperado da UI: `(file_name, path)`
+- emite `lista_arquivos` e `search_summary` mantendo contrato existente
+
+Garantia de seguranca:
+
+- scanner tradicional continua intacto e como fallback confiavel
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

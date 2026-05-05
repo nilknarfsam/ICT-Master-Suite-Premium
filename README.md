@@ -67,6 +67,26 @@ Opcionalmente, use o runner:
 
 Observacao: `legacy/finder_logs_original` permanece como referencia congelada. A base ativa de execucao da Premium fica em `src/app_desktop`.
 
+## Como executar no Windows
+
+Forma recomendada:
+
+- `scripts\run_desktop.bat`
+
+PowerShell:
+
+- `powershell -ExecutionPolicy Bypass -File scripts\run_desktop.ps1`
+
+Manual:
+
+- `.venv\Scripts\python.exe run_desktop.py`
+
+Notas importantes:
+
+- no PowerShell, o ativador correto da venv e `.venv\Scripts\Activate.ps1`
+- evite `.\run_desktop.py` diretamente; prefira sempre executar via Python
+- guia detalhado: `docs/RUN_DESKTOP_WINDOWS.md`
+
 ## Validacao de desenvolvimento
 
 Para validar rapidamente a base desktop premium:

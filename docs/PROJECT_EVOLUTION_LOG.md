@@ -223,3 +223,11 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: execucao de `scripts\dev_check.bat` e `python -m pytest tests`.
 - Observacoes: sem auto-reindexacao, sem mudanca de banco, sem alteracao visual; timer de sincronizacao e preparacao de historico iniciam apos UI visivel.
 - Proximo passo: comparar relatorios de startup entre ambientes (rede local vs remota) para definir proximas otimizações.
+
+### [2026-05-05] — [Fase Dev UX] — Scripts de execução Windows
+- Objetivo: tornar o fluxo de execução local no Windows mais confiável, sem dependência de ativação manual da venv.
+- Resumo técnico: adicionados runners `.bat` e `.ps1` com criação automática de `.venv`, instalação de dependências e execução via `.venv\Scripts\python.exe`; reforçado `run_desktop.py` com logging de erro crítico/encerramento rápido em `crash_log.txt`.
+- Arquivos principais: `scripts/run_desktop.bat`, `scripts/run_desktop.ps1`, `run_desktop.py`, `docs/RUN_DESKTOP_WINDOWS.md`, `README.md`, `CHANGELOG.md`.
+- Commit: pendente (a preencher após commit do lote atual).
+- Validação: `scripts\dev_check.bat`, `scripts\run_desktop.bat` (quando possível no ambiente), e fallback de import `.\.venv\Scripts\python.exe -c "import src.app_desktop.ui_main; print('UI_IMPORT_OK')"`.
+- Próximo passo: adicionar verificação opcional de dependências gráficas (PyQt5) no runner para mensagens de erro ainda mais claras.

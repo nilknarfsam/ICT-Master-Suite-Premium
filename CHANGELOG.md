@@ -45,6 +45,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionado worker de reindexacao em background para futura integracao na UI.
 - Adicionado botao controlado para reindexar logs pela UI.
 - Adicionada instrumentacao de startup e preparacao para otimizacao de abertura.
+- Adicionados scripts de execucao Windows para app desktop premium.
 
 ## [0.1.0] - 2026-04-28
 

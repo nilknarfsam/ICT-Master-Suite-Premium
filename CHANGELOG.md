@@ -36,6 +36,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada estrutura inicial de indexacao local de logs.
 - Adicionada indexacao incremental local de logs.
 - Adicionada camada application para indexacao local de logs.
+- Adicionado script manual para construir indice local de logs.
 
 ## [0.1.0] - 2026-04-28
 

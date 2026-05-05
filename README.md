@@ -82,3 +82,13 @@ O script executa:
 Para validacao manual operacional, use o checklist:
 
 - `docs/SMOKE_TEST_DESKTOP.md`
+
+## Indexacao manual de logs
+
+Para construir/atualizar manualmente o indice local de logs:
+
+- `python scripts/build_log_index.py`
+
+Para informar diretorios explicitamente:
+
+- `python scripts/build_log_index.py "\\servidor\logs\tri" "\\servidor\logs\agilent"`

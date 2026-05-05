@@ -71,6 +71,26 @@ API exposta:
 
 Observacao: essa camada ainda nao foi conectada na UI nem no fluxo principal de busca.
 
+## Script manual de indexacao
+
+Foi adicionado o script `scripts/build_log_index.py` para construcao/atualizacao manual do indice local, sem execucao automatica na inicializacao do app.
+
+Comportamento:
+
+- aceita diretorios por argumento de linha de comando
+- sem argumentos, usa caminhos do config:
+  - `caminho_logs_tri`
+  - `caminho_logs_agilent`
+  - `backup_local_dir`
+- usa extensoes padrao:
+  - `.csv`, `.dcl`, `.txt`, `.log`
+- imprime resumo por diretorio e total final no indice
+
+Exemplos de uso:
+
+- `python scripts/build_log_index.py`
+- `python scripts/build_log_index.py "\\servidor\logs\tri" "\\servidor\logs\agilent"`
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

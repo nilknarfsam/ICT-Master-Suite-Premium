@@ -14,6 +14,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada camada application services.
 - Adicionados DTOs de aplicacao.
 - Adicionados testes de servicos de aplicacao.
+- UI desktop passou a usar LogSearchService para normalizacao e validacao do termo de busca.
 
 ## [0.1.0] - 2026-04-28
 

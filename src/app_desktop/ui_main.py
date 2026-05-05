@@ -22,6 +22,7 @@ from src.app_desktop.legacy_facade import (carregar_config, salvar_config, salva
                     obter_ultimas_analises, obter_estatisticas_progresso, limpar_analises_db, verificar_conexao_db, 
                     limpar_cache_local, buscar_historico_serial, validar_login, listar_usuarios, 
                     cadastrar_usuario, deletar_usuario, atualizar_usuario, adicionar_modelo, listar_modelos, adicionar_solucao_wiki, buscar_solucoes_wiki, editar_modelo, gerar_relatorio_excel)
+from src.application.services.log_search_service import LogSearchService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
 from src.app_desktop import updater
 
@@ -188,6 +189,7 @@ class MainApp(QWidget):
         self.thread_loader = None
         self.current_file_name = None
         self._last_purge_date = None
+        self.log_search_service = LogSearchService()
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
@@ -1083,10 +1085,8 @@ class MainApp(QWidget):
     def buscar(self):
         self.current_file_name = None
         
-        # Sanitização e feedback visual
-        serial_limpo = self.input_serial.text().strip().upper()
-        self.input_serial.setText(serial_limpo)
-        termo = serial_limpo
+        termo = self.log_search_service.normalize_search_term(self.input_serial.text())
+        self.input_serial.setText(termo)
         
         if not self.config.get("caminho_logs_tri") or not self.config.get("caminho_logs_agilent"):
             QMessageBox.information(self, "Caminhos Não Configurados", 
@@ -1094,7 +1094,7 @@ class MainApp(QWidget):
                                     "Por favor, clique no botão '⚙️ Config' no canto superior direito para definir os diretórios do 'Finder TRI' e 'Finder Agilent'.")
             return
 
-        if len(termo) < 5:
+        if not self.log_search_service.validate_search_term(termo):
             QMessageBox.warning(self, "Formato Inválido", "Digite pelo menos 5 caracteres do serial para realizar a busca.")
             return
 

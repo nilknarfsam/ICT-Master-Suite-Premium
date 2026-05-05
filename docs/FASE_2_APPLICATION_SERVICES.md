@@ -32,6 +32,16 @@ A camada `application` organiza casos de uso do sistema em servicos orientados a
 
 Arquivo: `src/application/dtos/log_dtos.py`
 
+## Primeira integracao com UI desktop
+
+A primeira integracao gradual foi aplicada em `src/app_desktop/ui_main.py` apenas no fluxo de entrada do termo de busca:
+
+- a UI passou a instanciar `LogSearchService`
+- a normalizacao do termo usa `normalize_search_term`
+- a validacao minima usa `validate_search_term`
+
+O restante do fluxo de busca foi mantido sem alteracoes para preservar comportamento atual e reduzir risco de regressao.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

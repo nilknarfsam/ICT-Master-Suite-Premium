@@ -83,6 +83,20 @@ Uso futuro:
 
 - a UI pode consumir esse sinal posteriormente para mensagens/indicadores de UX, sem necessidade de alterar a regra de busca
 
+## Status bar com resumo de limitação
+
+O sinal `search_summary` agora foi conectado na UI do Finder para atualizar apenas a `status_bar` existente, sem alterar layout ou criar componentes novos.
+
+Regras de exibicao:
+
+- se `limitado` for `True`: `Exibindo {total_exibido} de {total_original} arquivos encontrados. Refine a busca para ver menos resultados.`
+- se `limitado` for `False`: `{total_exibido} arquivos encontrados.`
+
+Observacao tecnica:
+
+- a lista de resultados (`lista_arquivos`) permanece com o mesmo formato
+- `popular_lista` continua funcionando; o resumo final sobrescreve a `status_bar` via sinal emitido depois
+
 ## Proximos passos
 
 1. Integrar `SearchOptions` ao fluxo de busca em `threads.py` sem alterar UX.

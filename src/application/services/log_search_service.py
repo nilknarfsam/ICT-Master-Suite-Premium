@@ -35,3 +35,14 @@ class LogSearchService:
 
     def was_limited(self, original_count: int, limited_count: int) -> bool:
         return original_count > limited_count
+
+    def build_summary_message(self, summary: dict) -> str:
+        total_original = summary.get("total_original", 0)
+        total_exibido = summary.get("total_exibido", 0)
+        limitado = summary.get("limitado", False)
+        if limitado:
+            return (
+                f"Exibindo {total_exibido} de {total_original} arquivos encontrados. "
+                "Refine a busca para ver menos resultados."
+            )
+        return f"{total_exibido} arquivos encontrados."

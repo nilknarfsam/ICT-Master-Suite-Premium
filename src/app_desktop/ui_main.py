@@ -1120,6 +1120,7 @@ class MainApp(QWidget):
 
         self.thread_busca = BuscaThread(termo, dirs)
         self.thread_busca.lista_arquivos.connect(self.popular_lista)
+        self.thread_busca.search_summary.connect(self.on_search_summary)
         self.thread_busca.start()
         
     def popular_lista(self, arquivos):
@@ -1134,6 +1135,9 @@ class MainApp(QWidget):
             self.list_logs.addItem(nome)
             self.arquivos_mapa[nome] = caminho
         self.status_bar.setText(f"{len(arquivos)} arquivos encontrados.")
+
+    def on_search_summary(self, summary: dict):
+        self.status_bar.setText(self.log_search_service.build_summary_message(summary))
         
     def carregar_arquivo(self):
         # ... (código existente, sem alterações)

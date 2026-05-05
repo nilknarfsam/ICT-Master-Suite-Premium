@@ -31,6 +31,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionadas opcoes de busca de logs para futura otimizacao de performance.
 - Scanner de logs passou a usar LogSearchService para filtro de arquivos.
 - Scanner preparado com limite inicial de resultados para reduzir carga em buscas extensas.
+- Busca de logs agora prepara resumo interno quando resultados sao limitados.
 
 ## [0.1.0] - 2026-04-28
 

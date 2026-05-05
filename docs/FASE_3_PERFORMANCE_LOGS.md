@@ -62,6 +62,27 @@ Observacao de evolucao:
 
 - este valor pode ser exposto futuramente como opcao configuravel na UI, mantendo fallback seguro no service
 
+## Resumo interno de busca limitada
+
+O scanner agora prepara um resumo interno apos aplicar o limite, sem alterar o formato atual de lista enviado para a UI.
+
+Dados gerados:
+
+- `total_original`
+- `total_exibido`
+- `limitado`
+- `max_results`
+
+Implementacao:
+
+- `LogSearchService.was_limited(original_count, limited_count)` define se houve corte real
+- `BuscaThread` armazena `self.was_limited`
+- `BuscaThread` emite sinal opcional `search_summary` com dicionario de resumo
+
+Uso futuro:
+
+- a UI pode consumir esse sinal posteriormente para mensagens/indicadores de UX, sem necessidade de alterar a regra de busca
+
 ## Proximos passos
 
 1. Integrar `SearchOptions` ao fluxo de busca em `threads.py` sem alterar UX.

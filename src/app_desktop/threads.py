@@ -32,6 +32,7 @@ def _safe_copy(src, dst):
 class BuscaThread(QThread):
     """Thread para buscar arquivos otimizada para rede (scandir)."""
     lista_arquivos = pyqtSignal(list)
+    search_summary = pyqtSignal(dict)
     status_msg = pyqtSignal(str)
 
     def __init__(self, termo, diretorios):
@@ -41,6 +42,7 @@ class BuscaThread(QThread):
         self.rodando = True
         self.log_search_service = LogSearchService()
         self.search_options = self.log_search_service.build_default_options()
+        self.was_limited = False
 
     def _scandir_recursivo(self, caminho):
         """Percorre todas as subpastas dinamicamente, sem depender de nomes específicos, usando scandir para performance máxima."""
@@ -84,9 +86,20 @@ class BuscaThread(QThread):
         if self.rodando:
             # Ordena por data (mais recente primeiro)
             encontrados.sort(key=lambda x: x[0], reverse=True)
+            total_original = len(encontrados)
             encontrados = self.log_search_service.limit_results(encontrados, self.search_options)
+            total_limitado = len(encontrados)
+            self.was_limited = self.log_search_service.was_limited(total_original, total_limitado)
             # Retorna lista de tuplas (nome, caminho) para a UI
             self.lista_arquivos.emit([(x[1], x[2]) for x in encontrados])
+            self.search_summary.emit(
+                {
+                    "total_original": total_original,
+                    "total_exibido": total_limitado,
+                    "limitado": self.was_limited,
+                    "max_results": self.search_options.max_results,
+                }
+            )
 
     def parar(self):
         self.rodando = False

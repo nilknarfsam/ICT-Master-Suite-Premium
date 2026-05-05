@@ -12,21 +12,31 @@
 - Isolar camada de interface desktop da camada de negocio.
 - Padronizar servicos de aplicacao para operacoes de logs.
 - Preparar testes unitarios para servicos centrais.
-- Application Services Layer criada.
+- Application Services Layer criada e validada nos fluxos principais.
+- Auditoria final de dependencias da `legacy_facade` executada.
+- Status: **quase concluida** (restando apenas fechamento da compatibilidade da facade).
 
-## Fase 3 - API local opcional
+## Fase 3 - Performance e Otimizacao da Busca de Logs
+
+- Otimizar performance da busca de logs em rede.
+- Introduzir indexacao/cache local para reduzir latencia.
+- Melhorar scanner de arquivos (filtros, recursao e robustez).
+- Medir desempenho com cenarios reais e estabelecer baseline.
+- Preparar base para dashboard premium futuro.
+
+## Fase 4 - API local opcional
 
 - Disponibilizar endpoints locais para integracoes internas.
 - Expor consultas de historico, falhas e conhecimento tecnico.
 - Manter modo desktop como fluxo principal.
 
-## Fase 4 - Interface moderna futura
+## Fase 5 - Interface moderna futura
 
 - Evoluir experiencia de uso com componentes visuais modernos.
 - Melhorar navegacao de historico e produtividade tecnica.
 - Preservar compatibilidade com operacao atual.
 
-## Fase 5 - Relatorios e dashboard premium
+## Fase 6 - Relatorios e dashboard premium
 
 - Consolidar analytics de falhas e tratativas.
 - Entregar relatorios tecnicos e indicadores de performance.

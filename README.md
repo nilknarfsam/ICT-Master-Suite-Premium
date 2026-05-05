@@ -28,6 +28,33 @@ O projeto foi organizado para suportar modularizacao progressiva:
 
 Esta versao contem somente preparacao estrutural para o primeiro ciclo de commits da Premium.
 
+## Estado atual da arquitetura
+
+Arquitetura ativa apos as migracoes da Fase 2:
+
+- UI desktop em `src/app_desktop`
+- regras de negocio em `src/core`
+- orquestracao de fluxos em `src/application/services`
+- adaptadores tecnicos em `src/infrastructure`
+
+Servicos de aplicacao em uso:
+
+- `LogSearchService`
+- `LogAnalysisService`
+- `WikiService`
+- `AuthApplicationService`
+- `ReportApplicationService`
+- `SyncApplicationService`
+- `DatabaseApplicationService`
+
+Status da `legacy_facade`:
+
+- mantida temporariamente por compatibilidade
+- dependencia direta reduzida para pontos estruturais controlados
+- auditoria de uso com scripts:
+  - `python scripts/find_facade_usage.py`
+  - `python scripts/find_unused_facade_exports.py`
+
 ## Executando a versao premium desktop
 
 Para executar a base desktop premium a partir da raiz do projeto:

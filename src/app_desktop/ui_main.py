@@ -23,6 +23,7 @@ from src.app_desktop.legacy_facade import (carregar_config, salvar_config, salva
                     limpar_cache_local, buscar_historico_serial, validar_login, listar_usuarios, 
                     cadastrar_usuario, deletar_usuario, atualizar_usuario, adicionar_modelo, listar_modelos, adicionar_solucao_wiki, buscar_solucoes_wiki, editar_modelo, gerar_relatorio_excel)
 from src.application.services.log_search_service import LogSearchService
+from src.application.services.log_analysis_service import LogAnalysisService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
 from src.app_desktop import updater
 
@@ -190,6 +191,7 @@ class MainApp(QWidget):
         self.current_file_name = None
         self._last_purge_date = None
         self.log_search_service = LogSearchService()
+        self.log_analysis_service = LogAnalysisService()
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
@@ -684,7 +686,7 @@ class MainApp(QWidget):
         texto_analise = self.txt_history_obs.toPlainText().strip()
         nome_usuario = self.usuario_logado['nome'] if self.usuario_logado else "Local"
 
-        resultado = salvar_observacao(file_name, texto_analise, tecnico=nome_usuario)
+        resultado = self.log_analysis_service.save_analysis(file_name, texto_analise, nome_usuario)
         if resultado == "OFFLINE":
             self.txt_history_obs.clear()
             QMessageBox.warning(self, "Modo Offline", "Rede indisponível. Sua análise foi salva na fila local e será sincronizada assim que a rede voltar!")
@@ -1365,7 +1367,7 @@ class MainApp(QWidget):
             
         nome_usuario = self.usuario_logado['nome'] if self.usuario_logado else "Local"
         
-        resultado = salvar_observacao(self.current_file_name, texto, tecnico=nome_usuario)
+        resultado = self.log_analysis_service.save_analysis(self.current_file_name, texto, nome_usuario)
         if resultado == "OFFLINE":
             self.txt_observacao.clear()
             QMessageBox.warning(self, "Modo Offline", "Rede indisponível. Sua observação foi salva na fila local e será sincronizada assim que a rede voltar!")

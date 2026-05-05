@@ -51,6 +51,15 @@ No carregamento de arquivos em `src/app_desktop/threads.py`, o parsing de metada
 
 Essa mudanca foi feita apenas no ponto de parsing, sem alterar fluxo de thread, estrutura de retorno ou comportamento funcional.
 
+## Salvamento de analise migrado para Application Service
+
+No fluxo de UI em `src/app_desktop/ui_main.py`, o salvamento de observacoes/analises passou a usar `LogAnalysisService`.
+
+- antes: chamada direta de `salvar_observacao(...)`
+- agora: `LogAnalysisService.save_analysis(...)`
+
+A mudanca manteve mensagens da UI, tratamento de erro e comportamento funcional inalterados.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

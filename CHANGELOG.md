@@ -40,6 +40,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada base para busca hibrida usando indice local.
 - Busca de logs agora usa indice local quando disponivel com fallback automatico.
 - Status bar agora informa se busca veio do indice ou scanner.
+- Criado log mestre de evolucao tecnica do projeto.
 
 ## [0.1.0] - 2026-04-28
 

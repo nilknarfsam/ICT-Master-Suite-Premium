@@ -92,3 +92,9 @@ Para construir/atualizar manualmente o indice local de logs:
 Para informar diretorios explicitamente:
 
 - `python scripts/build_log_index.py "\\servidor\logs\tri" "\\servidor\logs\agilent"`
+
+## Log de evolucao do projeto
+
+O historico tecnico consolidado das etapas da migracao Premium esta em:
+
+- `docs/PROJECT_EVOLUTION_LOG.md`

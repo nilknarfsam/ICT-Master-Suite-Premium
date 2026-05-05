@@ -28,6 +28,7 @@ from src.application.services.report_application_service import ReportApplicatio
 from src.application.services.sync_application_service import SyncApplicationService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread, ReindexThread
 from src.app_desktop import updater
+from src.shared.startup_profiler import mark as startup_mark, report as startup_report
 
 def get_resource_path(relative_path):
     """
@@ -159,11 +160,13 @@ class DialogNovaSolucao(QDialog):
 
 class MainApp(QWidget):
     def __init__(self, usuario_logado=None, start_minimized=False):
+        startup_mark("MainApp.__init__: inicio")
         super().__init__()
         self.setWindowTitle("ICT Master Suite - V5.3 (Polished UI)")
         self.setWindowIcon(QIcon(get_resource_path('icon.ico')))
         self.setGeometry(100, 100, 1280, 800)
         self.config = carregar_config()
+        startup_mark("MainApp.__init__: config carregada")
         
         # --- VERIFICAÇÃO DE ATUALIZAÇÕES (Desativado temporariamente para otimização onedir) ---
         # versao_atual = updater.get_current_version()
@@ -181,9 +184,6 @@ class MainApp(QWidget):
         # --- CHECAGEM BLOQUEANTE DE BANCO DE DADOS ---
         # Removido para permitir inicialização offline
         
-        # Executa o Garbage Collector do cache na inicialização
-        limpar_cache_local()
-        
         try:
             os.makedirs(self.config["backup_local_dir"], exist_ok=True)
         except OSError: pass
@@ -199,6 +199,7 @@ class MainApp(QWidget):
         self.auth_service = AuthApplicationService()
         self.report_service = ReportApplicationService()
         self.sync_service = SyncApplicationService()
+        startup_mark("MainApp.__init__: services criados")
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
@@ -212,22 +213,30 @@ class MainApp(QWidget):
         # Motor de Sincronização (Store-and-Forward)
         self.timer_sync = QTimer(self)
         self.timer_sync.timeout.connect(self.processar_sincronizacao_background)
-        self.timer_sync.start(15000)
         
+        startup_mark("MainApp.__init__: antes init_ui")
         self.init_ui()
+        startup_mark("MainApp.__init__: depois init_ui")
+        startup_mark("MainApp.__init__: antes init_tray")
         self.init_tray()
-        self._maybe_purge_backups()
+        startup_mark("MainApp.__init__: depois init_tray")
         
         # Removido timer do Dashboard (Substituído por Wiki)
         pass
 
+        startup_mark("MainApp.__init__: antes load_stylesheet")
         self.load_stylesheet()
+        startup_mark("MainApp.__init__: depois load_stylesheet")
 
+        startup_mark("MainApp.__init__: antes show")
         if start_minimized:
             self.hide()
             self.tray_icon.showMessage("ICT Suite", "Rodando em background.", QSystemTrayIcon.Information, 2000)
         else:
             self.show()
+        startup_mark("MainApp.__init__: UI visivel")
+        print(startup_report())
+        QTimer.singleShot(0, self._run_post_startup_tasks)
 
     def load_stylesheet(self):
         try:
@@ -655,12 +664,10 @@ class MainApp(QWidget):
         left_layout.setContentsMargins(0, 0, 0, 0)
 
         self.fs_model = QFileSystemModel()
-        self.fs_model.setRootPath(self.config["backup_local_dir"])
         self.fs_model.setFilter(QDir.NoDotAndDotDot | QDir.Files | QDir.AllDirs)
 
         self.tree_history = QTreeView()
         self.tree_history.setModel(self.fs_model)
-        self.tree_history.setRootIndex(self.fs_model.index(self.config["backup_local_dir"]))
         
         # Ocultar colunas de tamanho, tipo e data
         self.tree_history.setColumnHidden(1, True) # Size
@@ -706,6 +713,20 @@ class MainApp(QWidget):
         
         splitter.setSizes([350, 750])
         layout.addWidget(splitter)
+
+    def _initialize_history_model_root(self):
+        backup_root = self.config.get("backup_local_dir", "")
+        if not backup_root:
+            return
+        self.fs_model.setRootPath(backup_root)
+        self.tree_history.setRootIndex(self.fs_model.index(backup_root))
+
+    def _run_post_startup_tasks(self):
+        # Tarefas pesadas/IO adiantadas para depois da primeira renderização.
+        self.timer_sync.start(15000)
+        self._initialize_history_model_root()
+        limpar_cache_local()
+        self._maybe_purge_backups()
 
 
     def on_history_file_clicked(self, index):
@@ -1542,7 +1563,7 @@ class MainApp(QWidget):
         else:
             QApplication.quit()
 
-if __name__ == "__main__":
+def main():
     import traceback
     def global_exception_handler(exc_type, exc_value, exc_traceback):
         """Captura quedas silenciosas e escreve o erro no crash_log.txt"""
@@ -1553,5 +1574,8 @@ if __name__ == "__main__":
     sys.excepthook = global_exception_handler
 
     app = QApplication(sys.argv)
-    win = MainApp(start_minimized="--minimized" in sys.argv)
-    sys.exit(app.exec_())
+    _win = MainApp(start_minimized="--minimized" in sys.argv)
+    return app.exec_()
+
+if __name__ == "__main__":
+    sys.exit(main())

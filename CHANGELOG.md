@@ -44,6 +44,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada reindexacao completa manual de logs.
 - Adicionado worker de reindexacao em background para futura integracao na UI.
 - Adicionado botao controlado para reindexar logs pela UI.
+- Adicionada instrumentacao de startup e preparacao para otimizacao de abertura.
 
 ## [0.1.0] - 2026-04-28
 

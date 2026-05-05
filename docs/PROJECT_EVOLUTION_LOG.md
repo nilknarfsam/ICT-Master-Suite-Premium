@@ -214,3 +214,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: execucao de `scripts\dev_check.bat` e `python -m pytest tests`.
 - Observacoes: sem execucao automatica; scanner/busca legada mantidos com fallback.
 - Proximo passo: opcionalmente evoluir para barra de progresso na UI.
+
+### [2026-05-05] — [Fase 3.15] — Diagnostico e otimizacao de startup desktop
+- Objetivo: medir custo de inicializacao e acelerar a primeira exibicao da janela sem alterar layout, funcionalidades ou fluxo de busca.
+- Prompt aplicado/resumo: criada instrumentacao com `time.perf_counter()` (marks por etapa em `run_desktop.py` e `ui_main.py`) e adiadas tarefas de IO pesado para pos-primeira renderizacao via `QTimer.singleShot(0, ...)`.
+- Arquivos principais: `src/shared/startup_profiler.py`, `run_desktop.py`, `src/app_desktop/ui_main.py`, `CHANGELOG.md`.
+- Commit: pendente (a preencher apos commit do lote atual).
+- Testes/validacao: execucao de `scripts\dev_check.bat` e `python -m pytest tests`.
+- Observacoes: sem auto-reindexacao, sem mudanca de banco, sem alteracao visual; timer de sincronizacao e preparacao de historico iniciam apos UI visivel.
+- Proximo passo: comparar relatorios de startup entre ambientes (rede local vs remota) para definir proximas otimizações.

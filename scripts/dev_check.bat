@@ -10,8 +10,13 @@ python scripts/smoke_check.py
 if errorlevel 1 goto :error
 
 echo [3/3] Executando testes de import...
-python -m pytest tests/test_legacy_facade_imports.py tests/test_desktop_imports.py
-if errorlevel 1 goto :error
+python -c "import pytest" >nul 2>&1
+if errorlevel 1 (
+    echo pytest nao instalado. Rode: pip install pytest
+) else (
+    python -m pytest tests/test_legacy_facade_imports.py tests/test_desktop_imports.py
+    if errorlevel 1 goto :error
+)
 
 echo.
 echo DEV CHECK CONCLUIDO COM SUCESSO.

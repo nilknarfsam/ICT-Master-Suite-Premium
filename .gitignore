@@ -34,6 +34,9 @@ htmlcov/
 *.sqlite
 *.sqlite3
 
+# Runtime local config
+src/core/config/ict_config.json
+
 # Logs and temp files
 *.log
 logs/

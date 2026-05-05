@@ -3,6 +3,8 @@ import sys
 import json
 import subprocess
 
+from src.core.config.config_service import CONFIG_FILE
+
 def get_current_version():
     try:
         if os.path.exists("version.json"):
@@ -17,7 +19,6 @@ def verificar_atualizacao(caminho_rede=None, versao_atual="1.0.0"):
     try:
         if not caminho_rede:
             try:
-                from src.app_desktop.legacy_facade import CONFIG_FILE
                 if os.path.exists(CONFIG_FILE):
                     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
                         data = json.load(f)

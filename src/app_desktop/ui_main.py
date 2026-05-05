@@ -18,9 +18,11 @@ from PyQt5.QtCore import Qt, QTimer, QDir
 from PyQt5.QtGui import QColor, QFont, QIcon
 from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryAxis, QValueAxis, QPieSeries, QPieSlice
 
-from src.app_desktop.legacy_facade import (carregar_config, salvar_config, salvar_falha_db, salvar_observacao, ler_observacao, 
+from src.app_desktop.legacy_facade import (salvar_falha_db, salvar_observacao, ler_observacao, 
                     obter_ultimas_analises, obter_estatisticas_progresso, limpar_analises_db, verificar_conexao_db, 
-                    limpar_cache_local, buscar_historico_serial)
+                    buscar_historico_serial)
+from src.core.config.config_service import carregar_config, salvar_config
+from src.core.config.cache_service import limpar_cache_local
 from src.application.services.log_search_service import LogSearchService
 from src.application.services.log_analysis_service import LogAnalysisService
 from src.application.services.wiki_service import WikiService
@@ -100,7 +102,6 @@ class LoginDialog(QDialog):
         if usuario:
             self.usuario_logado = usuario
             
-            from src.app_desktop.legacy_facade import carregar_config, salvar_config
             config = carregar_config()
             config["lembrar_login"] = self.chk_lembrar.isChecked()
             config["ultimo_login"] = login if self.chk_lembrar.isChecked() else ""
@@ -1439,7 +1440,6 @@ class MainApp(QWidget):
             
         self.usuario_logado = None
         self.config["lembrar_login"] = False
-        from src.app_desktop.legacy_facade import salvar_config
         salvar_config(self.config)
         
         self.lbl_perfil.setText("👤 Visitante (Somente Leitura)")

@@ -23,6 +23,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Exportacao de relatorios agora usa ReportApplicationService.
 - Sincronizacao offline/background agora usa SyncApplicationService.
 - Adicionada auditoria da legacy_facade.
+- Chamadas de configuracao desktop migradas para core config service.
 
 ## [0.1.0] - 2026-04-28
 

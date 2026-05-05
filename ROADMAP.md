@@ -18,6 +18,7 @@
 
 ## Fase 3 - Performance e Otimizacao da Busca de Logs
 
+- Status: **iniciada (Fase 3.1 - opcoes seguras de busca no service)**.
 - Otimizar performance da busca de logs em rede.
 - Introduzir indexacao/cache local para reduzir latencia.
 - Melhorar scanner de arquivos (filtros, recursao e robustez).

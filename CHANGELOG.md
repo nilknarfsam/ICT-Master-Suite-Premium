@@ -28,6 +28,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Verificacoes de banco migradas para DatabaseApplicationService.
 - Adicionada auditoria final de dependencias da legacy_facade.
 - Checkpoint da Fase 2 documentado.
+- Adicionadas opcoes de busca de logs para futura otimizacao de performance.
 
 ## [0.1.0] - 2026-04-28
 

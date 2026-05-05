@@ -27,3 +27,15 @@ O projeto foi organizado para suportar modularizacao progressiva:
 ## Escopo do momento
 
 Esta versao contem somente preparacao estrutural para o primeiro ciclo de commits da Premium.
+
+## Executando a versao premium desktop
+
+Para executar a base desktop premium a partir da raiz do projeto:
+
+- `python -m src.app_desktop.ui_main`
+
+Opcionalmente, use o runner:
+
+- `python run_desktop.py`
+
+Observacao: `legacy/finder_logs_original` permanece como referencia congelada. A base ativa de execucao da Premium fica em `src/app_desktop`.

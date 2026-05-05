@@ -5,6 +5,7 @@ from datetime import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from src.application.services.log_analysis_service import LogAnalysisService
+from src.application.services.log_search_service import LogSearchService
 
 def _wait_file_stable(path, retries=6, delay=0.35):
     """Aguarda o tamanho de um arquivo se estabilizar."""
@@ -38,6 +39,8 @@ class BuscaThread(QThread):
         self.termo = termo.lower()
         self.diretorios = diretorios
         self.rodando = True
+        self.log_search_service = LogSearchService()
+        self.search_options = self.log_search_service.build_default_options()
 
     def _scandir_recursivo(self, caminho):
         """Percorre todas as subpastas dinamicamente, sem depender de nomes específicos, usando scandir para performance máxima."""
@@ -56,15 +59,7 @@ class BuscaThread(QThread):
                             resultados.extend(self._scandir_recursivo(entry.path))
                         
                         elif entry.is_file(follow_symlinks=False):
-                            nome_lower = entry.name.lower()
-                            
-                            # Filtro inicial: contém o Serial buscado e é um log válido?
-                            if self.termo in nome_lower and nome_lower.endswith((".csv", ".dcl", ".txt", ".log")):
-                                
-                                # Filtro de Rejeição Rápida (PASS ou Aprovado)
-                                if "pass" in nome_lower or nome_lower.startswith("p_"):
-                                    continue
-                                
+                            if self.log_search_service.should_include_file(entry.name, self.termo, self.search_options):
                                 # Aprovação Universal (FAIL): Se chegou aqui, é candidato de falha
                                 ts = entry.stat().st_mtime
                                 resultados.append((ts, entry.name, entry.path))

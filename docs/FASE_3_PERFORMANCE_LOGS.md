@@ -36,6 +36,18 @@ A logica de filtro preserva o comportamento atual:
 - extensao deve estar na lista permitida
 - logs com `pass` no nome (ou prefixo `p_`) ficam fora por padrao
 
+## Filtro do scanner conectado ao LogSearchService
+
+O scanner em `src/app_desktop/threads.py` agora utiliza `LogSearchService.should_include_file(...)` para decidir se um arquivo entra na lista de candidatos.
+
+Garantias mantidas nesta integracao:
+
+- mesma regra de termo no nome
+- mesma regra de extensoes permitidas
+- mesma rejeicao padrao de arquivos `pass` e prefixo `p_`
+- mesma ordenacao final por data e formato de retorno para a UI
+- mesmo tratamento de erros de permissao/IO durante varredura
+
 ## Proximos passos
 
 1. Integrar `SearchOptions` ao fluxo de busca em `threads.py` sem alterar UX.

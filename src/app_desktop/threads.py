@@ -5,13 +5,6 @@ import uuid
 from datetime import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 
-# Funções migradas para o banco de dados SQLite
-from src.app_desktop.legacy_facade import (
-    detectar_tipo_log,
-    obter_estatisticas_ict,
-    salvar_falha_db,
-    init_db
-)
 from src.application.services.log_analysis_service import LogAnalysisService
 
 def _wait_file_stable(path, retries=6, delay=0.35):
@@ -151,6 +144,10 @@ class DashboardThread(QThread):
     """Thread para buscar as estatísticas do dashboard sem travar a UI."""
     stats_updated = pyqtSignal(dict)
 
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.log_analysis_service = LogAnalysisService()
+
     def run(self):
-        stats = obter_estatisticas_ict()
+        stats = self.log_analysis_service.get_ict_statistics()
         self.stats_updated.emit(stats)

@@ -18,9 +18,7 @@ from PyQt5.QtCore import Qt, QTimer, QDir
 from PyQt5.QtGui import QColor, QFont, QIcon
 from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryAxis, QValueAxis, QPieSeries, QPieSlice
 
-from src.app_desktop.legacy_facade import (salvar_falha_db, salvar_observacao, ler_observacao, 
-                    obter_ultimas_analises, obter_estatisticas_progresso, limpar_analises_db, verificar_conexao_db, 
-                    buscar_historico_serial)
+from src.app_desktop.legacy_facade import (verificar_conexao_db)
 from src.core.config.config_service import carregar_config, salvar_config
 from src.core.config.cache_service import limpar_cache_local
 from src.application.services.log_search_service import LogSearchService
@@ -734,7 +732,7 @@ class MainApp(QWidget):
             QApplication.processEvents() # Força atualização da UI
 
             # 1. Limpa o banco de dados
-            if not limpar_analises_db():
+            if not self.log_analysis_service.clear_analyses():
                 QMessageBox.critical(self, "Erro no Banco de Dados", "Não foi possível limpar as análises no banco de dados. Verifique a conexão de rede.")
                 self.status_bar.setText("Falha ao limpar o histórico.")
                 return
@@ -1192,7 +1190,7 @@ class MainApp(QWidget):
         self.txt_historico_chat.setPlainText(obs_existente)
         
         # Verifica histórico colaborativo da placa
-        historico = buscar_historico_serial(meta.get("serial", ""))
+        historico = self.log_analysis_service.get_serial_history(meta.get("serial", ""))
         if historico:
             data_fmt = historico["data"][:16] # simplifica a data se tiver ms
             tecnico = historico.get("tecnico") or "Desconhecido"
@@ -1278,7 +1276,7 @@ class MainApp(QWidget):
                     "arquivo": nome_arquivo, "serial": serial, "modelo": modelo,
                     "componente": defeito["componente"], "step": defeito["step"],
                 }
-                if salvar_falha_db(defeito_completo):
+                if self.log_analysis_service.save_failure(defeito_completo):
                     falhas_encontradas = 1
 
         elif meta['tipo'] == 'TRI':
@@ -1297,7 +1295,7 @@ class MainApp(QWidget):
                                 "componente": parts[1], "step": parts[0],
                             }
                 if defeito:
-                    if salvar_falha_db(defeito):
+                    if self.log_analysis_service.save_failure(defeito):
                         falhas_encontradas += 1
 
         if falhas_encontradas == 0 and meta.get('status') == 'FAIL':
@@ -1313,7 +1311,7 @@ class MainApp(QWidget):
                 "arquivo": nome_arquivo, "serial": serial, "modelo": modelo,
                 "componente": componente_generico, "step": step_generico,
             }
-            if salvar_falha_db(defeito_generico):
+            if self.log_analysis_service.save_failure(defeito_generico):
                 falhas_encontradas += 1
         
         return falhas_encontradas

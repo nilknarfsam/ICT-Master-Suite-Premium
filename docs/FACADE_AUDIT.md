@@ -4,24 +4,14 @@
 
 Funções/constantes da `legacy_facade` que ainda aparecem em uso na base ativa:
 
-- `salvar_falha_db`
-- `obter_estatisticas_progresso`
-- `limpar_analises_db`
 - `verificar_conexao_db`
-- `buscar_historico_serial`
-- `obter_estatisticas_ict`
 - `CONFIG_FILE` (uso removido de `updater.py`; ainda exposto na facade por compatibilidade)
 
 Observacao: `src/app_desktop/ui_main.py` ainda importa `salvar_observacao`, `ler_observacao` e `obter_ultimas_analises` via facade, mas os fluxos principais de analise ja foram migrados para `LogAnalysisService`.
 
 ## Onde estão sendo usadas
 
-- `salvar_falha_db` — `src/app_desktop/ui_main.py` (linhas ~21, ~1280, ~1299, ~1315) — contexto: persistencia de falhas no fluxo de leitura de log.
-- `obter_estatisticas_progresso` — `src/app_desktop/ui_main.py` (linha ~22) — contexto: dashboard/progresso.
-- `limpar_analises_db` — `src/app_desktop/ui_main.py` (linhas ~22, ~736) — contexto: ferramenta de limpeza historico.
 - `verificar_conexao_db` — `src/app_desktop/ui_main.py` (linhas ~22, ~676, ~719, ~1362) — contexto: validacao de conectividade antes de operacoes sensiveis.
-- `buscar_historico_serial` — `src/app_desktop/ui_main.py` (linhas ~23, ~1194) — contexto: historico colaborativo.
-- `obter_estatisticas_ict` — `src/app_desktop/threads.py` (linhas ~11, ~155) — contexto: dashboard thread.
 
 Referencias estruturais da facade:
 
@@ -39,6 +29,7 @@ Referencias estruturais da facade:
 - auth (OK)
 - relatórios (OK)
 - sync (OK)
+- falhas/análises remanescentes (OK)
 
 ## Status da migração de Config
 
@@ -50,14 +41,11 @@ Referencias estruturais da facade:
 
 ### Alta prioridade
 
-- `salvar_falha_db` (UI ainda chama facade diretamente; migracao simples para `LogAnalysisService.save_failure`).
-- `obter_estatisticas_ict` em `threads.py` (pode ir para `LogAnalysisService` ou service dedicado de dashboard).
-- `obter_estatisticas_progresso` (pode ser encapsulado em service de analytics/progresso).
+- `verificar_conexao_db` (pode ser encapsulado em service de diagnostico/conectividade).
 
 ### Média prioridade
 
-- `verificar_conexao_db` e `limpar_analises_db` (encapsular em service de manutencao/diagnostico).
-- `buscar_historico_serial` (encapsular em service de historico).
+- `src/app_desktop/threads.py` ainda referencia facade para compatibilidade estrutural de imports, apesar das chamadas críticas já migrarem por service.
 
 ### Baixa prioridade
 
@@ -76,7 +64,7 @@ Script executado: `scripts/find_facade_usage.py`
 
 Resumo em `src/`:
 
-- 4 referencias diretas a `legacy_facade` (apos migracao de configuracao)
+- 4 referencias diretas a `legacy_facade` (apos migracoes de config e falhas)
 - Arquivos detectados:
   - `src/app_desktop/ui_main.py`
   - `src/app_desktop/threads.py`

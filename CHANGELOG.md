@@ -22,6 +22,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Autenticacao e gestao de usuarios agora usam AuthApplicationService.
 - Exportacao de relatorios agora usa ReportApplicationService.
 - Sincronizacao offline/background agora usa SyncApplicationService.
+- Adicionada auditoria da legacy_facade.
 
 ## [0.1.0] - 2026-04-28
 

@@ -21,3 +21,29 @@ class LogIndexApplicationService:
 
     def count_entries(self):
         return self.service.count_entries()
+
+    def rebuild_index(self, base_paths: list[str], allowed_extensions=None):
+        paths = [p for p in (base_paths or []) if p]
+        self.service.clear_index()
+
+        total_indexed = 0
+        total_errors = 0
+        per_path = []
+        for path in paths:
+            summary = self.service.build_incremental_index(path, allowed_extensions)
+            total_indexed += summary.get("indexed", 0)
+            total_errors += summary.get("errors", 0)
+            per_path.append(
+                {
+                    "path": path,
+                    "indexed": summary.get("indexed", 0),
+                    "errors": summary.get("errors", 0),
+                }
+            )
+
+        return {
+            "paths": paths,
+            "total_indexed": total_indexed,
+            "total_errors": total_errors,
+            "per_path": per_path,
+        }

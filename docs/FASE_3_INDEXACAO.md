@@ -135,6 +135,24 @@ Na mensagem da status bar:
 - `source == "scanner"`: prefixo `Busca em rede:`
 - sem `source`: comportamento antigo preservado
 
+## Reindexacao completa controlada
+
+A camada de aplicacao agora suporta reindexacao completa manual via `rebuild_index(...)`, mantendo seguranca operacional.
+
+Fluxo:
+
+- limpa indice atual de forma explicita
+- processa cada diretorio informado com indexacao incremental
+- acumula totais de indexados e erros
+- retorna resumo consolidado para terminal/script
+
+No script CLI:
+
+- `python scripts/build_log_index.py --rebuild`
+- `python scripts/build_log_index.py --rebuild "C:\logs1" "C:\logs2"`
+
+Esse fluxo permanece manual e nao e executado automaticamente ao abrir o app.
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

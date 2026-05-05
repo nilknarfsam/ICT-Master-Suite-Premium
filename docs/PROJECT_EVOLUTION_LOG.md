@@ -187,3 +187,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: testes de mensagem com source/compatibilidade.
 - Observacoes: mantido contrato da lista emitida para UI.
 - Proximo passo: consolidar medicao de ganho e estrategia de rollout do indice.
+
+### [2026-05-05] — [Fase 3.13] — Reindexacao controlada
+- Objetivo: permitir rebuild manual do indice.
+- Prompt aplicado/resumo: adicao de `rebuild_index(...)` na camada application e extensao do script CLI com modo `--rebuild`.
+- Arquivos principais: `src/application/services/log_index_application_service.py`, `scripts/build_log_index.py`.
+- Commit: pendente (a preencher apos commit do lote atual).
+- Testes/validacao: `tests/scripts/test_rebuild_index.py` + validacao geral por `dev_check` e `pytest`.
+- Observacoes: indexacao controlada e segura, sem execucao automatica no app.
+- Proximo passo: integracao opcional na UI.

@@ -93,6 +93,10 @@ Para informar diretorios explicitamente:
 
 - `python scripts/build_log_index.py "\\servidor\logs\tri" "\\servidor\logs\agilent"`
 
+Para forcar reindexacao completa manual:
+
+- `python scripts/build_log_index.py --rebuild`
+
 ## Log de evolucao do projeto
 
 O historico tecnico consolidado das etapas da migracao Premium esta em:

@@ -39,6 +39,9 @@ class LogIndexService:
     def count_entries(self):
         return self.repository.count_entries()
 
+    def clear_index(self):
+        self.repository.clear_index()
+
     def index_file(self, path):
         if not path or not os.path.isfile(path):
             return False

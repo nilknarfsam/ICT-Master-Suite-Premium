@@ -231,3 +231,7 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Commit: pendente (a preencher após commit do lote atual).
 - Validação: `scripts\dev_check.bat`, `scripts\run_desktop.bat` (quando possível no ambiente), e fallback de import `.\.venv\Scripts\python.exe -c "import src.app_desktop.ui_main; print('UI_IMPORT_OK')"`.
 - Próximo passo: adicionar verificação opcional de dependências gráficas (PyQt5) no runner para mensagens de erro ainda mais claras.
+
+### [2026-05-05] — [Dev UX] — Runtime artifacts ignored
+- Objetivo: evitar ruído de arquivos gerados em runtime no `git status`.
+- Resumo técnico: atualização do `.gitignore` para ignorar `crash_log.txt` e `src/core/config/ict_config.json`.

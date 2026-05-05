@@ -44,12 +44,20 @@ class LogSearchService:
         total_original = summary.get("total_original", 0)
         total_exibido = summary.get("total_exibido", 0)
         limitado = summary.get("limitado", False)
+        source = summary.get("source")
         if limitado:
-            return (
+            base_message = (
                 f"Exibindo {total_exibido} de {total_original} arquivos encontrados. "
                 "Refine a busca para ver menos resultados."
             )
-        return f"{total_exibido} arquivos encontrados."
+        else:
+            base_message = f"{total_exibido} arquivos encontrados."
+
+        if source == "index":
+            return f"Busca rápida: {base_message}"
+        if source == "scanner":
+            return f"Busca em rede: {base_message}"
+        return base_message
 
     def is_index_ready(self) -> bool:
         return self.log_index_application_service.is_index_available()

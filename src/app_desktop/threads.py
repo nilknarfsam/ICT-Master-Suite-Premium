@@ -103,6 +103,7 @@ class BuscaThread(QThread):
                     "total_exibido": total_limitado,
                     "limitado": self.was_limited,
                     "max_results": self.search_options.max_results,
+                    "source": "index",
                 }
             )
             return
@@ -128,6 +129,7 @@ class BuscaThread(QThread):
                     "total_exibido": total_limitado,
                     "limitado": self.was_limited,
                     "max_results": self.search_options.max_results,
+                    "source": "scanner",
                 }
             )
 

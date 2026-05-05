@@ -120,6 +120,21 @@ Garantia de seguranca:
 
 - scanner tradicional continua intacto e como fallback confiavel
 
+## Feedback de origem da busca
+
+O `search_summary` agora informa a origem da busca para permitir feedback leve na `status_bar`, sem alterar layout.
+
+Campo adicionado no resumo:
+
+- `source: "index"` quando resultado veio do indice local
+- `source: "scanner"` quando resultado veio da varredura em rede
+
+Na mensagem da status bar:
+
+- `source == "index"`: prefixo `Busca rápida:`
+- `source == "scanner"`: prefixo `Busca em rede:`
+- sem `source`: comportamento antigo preservado
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

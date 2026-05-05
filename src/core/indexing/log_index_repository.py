@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 from src.infrastructure.sqlite.sqlite_paths import DB_LOCAL_PATH
 
@@ -27,9 +28,20 @@ class LogIndexRepository:
                 )
                 """
             )
+            self._ensure_compatible_columns(cursor)
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_log_index_file_name ON log_index (file_name)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_log_index_modified_time ON log_index (modified_time)")
             conn.commit()
+
+    def _ensure_compatible_columns(self, cursor):
+        cursor.execute("PRAGMA table_info(log_index)")
+        existing = {row[1] for row in cursor.fetchall()}
+        if "extension" not in existing:
+            cursor.execute("ALTER TABLE log_index ADD COLUMN extension TEXT")
+        if "size_bytes" not in existing:
+            cursor.execute("ALTER TABLE log_index ADD COLUMN size_bytes INTEGER")
+        if "indexed_at" not in existing:
+            cursor.execute("ALTER TABLE log_index ADD COLUMN indexed_at TIMESTAMP")
 
     def insert_log_entry(self, file_name, path, modified_time):
         self.init_index_db()
@@ -44,6 +56,56 @@ class LogIndexRepository:
                 (file_name, path, modified_time),
             )
             conn.commit()
+
+    def upsert_log_entry(self, file_name, path, modified_time, extension=None, size_bytes=None):
+        self.init_index_db()
+        indexed_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        existing = self.get_entry_by_path(path)
+        conn = self._connect()
+        with conn:
+            cursor = conn.cursor()
+            if existing:
+                cursor.execute(
+                    """
+                    UPDATE log_index
+                    SET file_name = ?, modified_time = ?, extension = ?, size_bytes = ?, indexed_at = ?
+                    WHERE path = ?
+                    """,
+                    (file_name, modified_time, extension, size_bytes, indexed_at, path),
+                )
+            else:
+                cursor.execute(
+                    """
+                    INSERT INTO log_index (file_name, path, modified_time, extension, size_bytes, indexed_at)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (file_name, path, modified_time, extension, size_bytes, indexed_at),
+                )
+            conn.commit()
+
+    def get_entry_by_path(self, path):
+        self.init_index_db()
+        conn = self._connect()
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT id, file_name, path, modified_time, extension, size_bytes, indexed_at
+                FROM log_index
+                WHERE path = ?
+                LIMIT 1
+                """,
+                (path,),
+            )
+            return cursor.fetchone()
+
+    def count_entries(self):
+        self.init_index_db()
+        conn = self._connect()
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM log_index")
+            return cursor.fetchone()[0]
 
     def search_by_term(self, term):
         self.init_index_db()

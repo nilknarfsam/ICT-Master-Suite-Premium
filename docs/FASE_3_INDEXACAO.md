@@ -36,6 +36,27 @@ Modulo novo em `src/core/indexing`:
 
 Observacao: nesta etapa, a indexacao foi criada apenas como base futura e ainda nao foi conectada ao fluxo real de busca.
 
+## Indexacao incremental
+
+A estrutura agora suporta indexacao incremental para reduzir custo de reconstrucoes completas.
+
+Evolucoes adicionadas:
+
+- enriquecimento do schema `log_index` com:
+  - `extension`
+  - `size_bytes`
+  - `indexed_at`
+- compatibilidade com tabelas antigas via `ALTER TABLE` seguro em inicializacao
+- `upsert_log_entry(...)` para atualizar registro existente por `path`
+- `get_entry_by_path(path)` e `count_entries()`
+
+No service:
+
+- `index_file(path)` indexa arquivo individual com validacoes basicas
+- `build_incremental_index(base_path, allowed_extensions=None)` percorre diretorio, aplica filtro de extensao e retorna resumo:
+  - `indexed`
+  - `errors`
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

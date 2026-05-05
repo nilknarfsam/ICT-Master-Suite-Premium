@@ -78,6 +78,15 @@ No fluxo de UI em `src/app_desktop/ui_main.py`, as operacoes da wiki passaram a 
 
 A migracao preserva parametros, retornos, mensagens e comportamento visual.
 
+## Autenticacao e usuarios migrados para Application Service
+
+No fluxo de UI em `src/app_desktop/ui_main.py`, autenticacao e gestao de usuarios passaram a usar `AuthApplicationService`.
+
+- antes: chamadas diretas de `validar_login`, `obter_usuario_por_login`, `listar_usuarios`, `cadastrar_usuario`, `deletar_usuario`, `atualizar_usuario`
+- agora: chamadas via `AuthApplicationService` com metodos equivalentes
+
+A migracao manteve parametros, retornos, mensagens da UI e comportamento visual inalterados.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

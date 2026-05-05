@@ -20,11 +20,11 @@ from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryA
 
 from src.app_desktop.legacy_facade import (carregar_config, salvar_config, salvar_falha_db, salvar_observacao, ler_observacao, 
                     obter_ultimas_analises, obter_estatisticas_progresso, limpar_analises_db, verificar_conexao_db, 
-                    limpar_cache_local, buscar_historico_serial, validar_login, listar_usuarios, 
-                    cadastrar_usuario, deletar_usuario, atualizar_usuario, gerar_relatorio_excel)
+                    limpar_cache_local, buscar_historico_serial, gerar_relatorio_excel)
 from src.application.services.log_search_service import LogSearchService
 from src.application.services.log_analysis_service import LogAnalysisService
 from src.application.services.wiki_service import WikiService
+from src.application.services.auth_application_service import AuthApplicationService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
 from src.app_desktop import updater
 
@@ -61,6 +61,7 @@ class LoginDialog(QDialog):
         self.setWindowTitle("Login - ICT Suite")
         self.setFixedSize(300, 200)
         self.usuario_logado = None
+        self.auth_service = AuthApplicationService()
         
         layout = QVBoxLayout(self)
         
@@ -93,7 +94,7 @@ class LoginDialog(QDialog):
             QMessageBox.warning(self, "Aviso", "Preencha o usuário e a senha.")
             return
             
-        usuario = validar_login(login, senha)
+        usuario = self.auth_service.validar_login(login, senha)
         if usuario:
             self.usuario_logado = usuario
             
@@ -194,12 +195,12 @@ class MainApp(QWidget):
         self.log_search_service = LogSearchService()
         self.log_analysis_service = LogAnalysisService()
         self.wiki_service = WikiService()
+        self.auth_service = AuthApplicationService()
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
             if not self.usuario_logado:
-                from src.app_desktop.legacy_facade import obter_usuario_por_login
-                usr = obter_usuario_por_login(self.config["ultimo_login"])
+                usr = self.auth_service.obter_usuario_por_login(self.config["ultimo_login"])
                 if usr:
                     self.usuario_logado = usr
 
@@ -457,7 +458,7 @@ class MainApp(QWidget):
         self.carregar_tabela_usuarios()
 
     def carregar_tabela_usuarios(self):
-        usuarios = listar_usuarios()
+        usuarios = self.auth_service.listar_usuarios()
         self.table_usuarios.setRowCount(len(usuarios))
         for row, user in enumerate(usuarios):
             self.table_usuarios.setItem(row, 0, QTableWidgetItem(str(user['id'])))
@@ -487,7 +488,7 @@ class MainApp(QWidget):
             QMessageBox.warning(self, "Aviso", "Preencha todos os campos para cadastrar.")
             return
             
-        if cadastrar_usuario(nome, login, senha, is_admin):
+        if self.auth_service.cadastrar_usuario(nome, login, senha, is_admin):
             QMessageBox.information(self, "Sucesso", "Usuário cadastrado com sucesso!")
             self.input_novo_nome.clear()
             self.input_novo_login.clear()
@@ -500,7 +501,7 @@ class MainApp(QWidget):
     def remover_usuario(self, id_usuario):
         resposta = QMessageBox.question(self, "Confirmação", "Tem certeza que deseja excluir este usuário?", QMessageBox.Yes | QMessageBox.No)
         if resposta == QMessageBox.Yes:
-            if deletar_usuario(id_usuario):
+            if self.auth_service.deletar_usuario(id_usuario):
                 QMessageBox.information(self, "Sucesso", "Usuário excluído com sucesso.")
                 self.carregar_tabela_usuarios()
             else:
@@ -553,7 +554,7 @@ class MainApp(QWidget):
                 QMessageBox.warning(self, "Aviso", "Nome e Login não podem ficar vazios.")
                 return
 
-            if atualizar_usuario(id_usuario, novo_nome, novo_login, nova_senha if nova_senha else None):
+            if self.auth_service.atualizar_usuario(id_usuario, novo_nome, novo_login, nova_senha if nova_senha else None):
                 QMessageBox.information(self, "Sucesso", "Usuário atualizado com sucesso!")
                 self.carregar_tabela_usuarios()
             else:

@@ -87,6 +87,15 @@ No fluxo de UI em `src/app_desktop/ui_main.py`, autenticacao e gestao de usuario
 
 A migracao manteve parametros, retornos, mensagens da UI e comportamento visual inalterados.
 
+## Relatorios migrados para Application Service
+
+No fluxo de UI em `src/app_desktop/ui_main.py`, a exportacao de relatorio Excel passou a usar `ReportApplicationService`.
+
+- antes: chamada direta de `gerar_relatorio_excel(...)`
+- agora: `ReportApplicationService.gerar_relatorio_excel(...)`
+
+A migracao manteve parametros, retorno e mensagens da UI inalterados.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

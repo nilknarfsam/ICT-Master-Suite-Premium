@@ -20,11 +20,12 @@ from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryA
 
 from src.app_desktop.legacy_facade import (carregar_config, salvar_config, salvar_falha_db, salvar_observacao, ler_observacao, 
                     obter_ultimas_analises, obter_estatisticas_progresso, limpar_analises_db, verificar_conexao_db, 
-                    limpar_cache_local, buscar_historico_serial, gerar_relatorio_excel)
+                    limpar_cache_local, buscar_historico_serial)
 from src.application.services.log_search_service import LogSearchService
 from src.application.services.log_analysis_service import LogAnalysisService
 from src.application.services.wiki_service import WikiService
 from src.application.services.auth_application_service import AuthApplicationService
+from src.application.services.report_application_service import ReportApplicationService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
 from src.app_desktop import updater
 
@@ -196,6 +197,7 @@ class MainApp(QWidget):
         self.log_analysis_service = LogAnalysisService()
         self.wiki_service = WikiService()
         self.auth_service = AuthApplicationService()
+        self.report_service = ReportApplicationService()
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
@@ -705,7 +707,7 @@ class MainApp(QWidget):
         caminho_destino, _ = QFileDialog.getSaveFileName(self, "Salvar Relatório", "Relatorio_ICT_Master.xlsx", "Excel Files (*.xlsx)")
         
         if caminho_destino:
-            if gerar_relatorio_excel(caminho_destino):
+            if self.report_service.gerar_relatorio_excel(caminho_destino):
                 QMessageBox.information(self, "Sucesso", f"O relatório foi exportado com sucesso para:\n{caminho_destino}")
             else:
                 QMessageBox.critical(self, "Erro", "Houve um problema ao gerar o relatório Excel. Verifique se o arquivo destino não está aberto ou bloqueado pelo sistema.")

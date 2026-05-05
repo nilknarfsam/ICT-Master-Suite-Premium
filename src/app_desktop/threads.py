@@ -1,7 +1,6 @@
 import os
 import shutil
 import time
-import uuid
 from datetime import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 

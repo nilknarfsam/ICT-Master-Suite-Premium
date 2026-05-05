@@ -2,7 +2,6 @@ import sys
 import os
 import winreg
 import time
-import uuid
 import re
 import shutil
 from datetime import datetime

@@ -1,73 +1,65 @@
 # Auditoria da Legacy Facade
 
-## Funções ainda utilizadas
+## Estado atual da facade
 
-Funções/constantes da `legacy_facade` que ainda aparecem em uso na base ativa:
+A `legacy_facade` foi mantida como camada de compatibilidade, mas os fluxos principais da UI ja foram migrados para services de aplicacao e modulos `core`.
 
-- `verificar_conexao_db` (parcialmente migrado para `DatabaseApplicationService`)
-- `CONFIG_FILE` (uso removido de `updater.py`; ainda exposto na facade por compatibilidade)
+Na base ativa (`src/`), as referencias diretas restantes ao modulo `legacy_facade` estao concentradas em:
 
-Observacao: `src/app_desktop/ui_main.py` ainda importa `salvar_observacao`, `ler_observacao` e `obter_ultimas_analises` via facade, mas os fluxos principais de analise ja foram migrados para `LogAnalysisService`.
+- `src/app_desktop/__init__.py` (reexport de compatibilidade)
+- `src/app_desktop/legacy_facade.py` (proprio modulo)
 
-## Onde estão sendo usadas
+Nao ha mais import direto de `legacy_facade` em:
 
-- `verificar_conexao_db` — `src/app_desktop/ui_main.py` (via `DatabaseApplicationService`) — contexto: validacao de conectividade antes de operacoes sensiveis.
+- `src/app_desktop/ui_main.py`
+- `src/app_desktop/threads.py`
+- `src/app_desktop/updater.py`
 
-Referencias estruturais da facade:
+## Funções ainda dependentes
 
-- `src/app_desktop/__init__.py` (linha ~1) — reexport legado.
-- `src/app_desktop/ui_main.py` (linhas ~21, ~103, ~1442) — imports diretos.
-- `src/app_desktop/threads.py` (linha ~9) — import de funcoes remanescentes.
-- `src/app_desktop/updater.py` (linha ~20) — import de `CONFIG_FILE`.
+As funcoes de banco ainda sao exportadas pela facade para compatibilidade retroativa:
 
-## Já migradas para Application Services
+- `conectar_banco`
+- `init_db`
+- `verificar_conexao_db`
+- `bootstrap_database`
 
-- parsing (OK)
-- salvar análise (OK)
-- leitura análise (OK)
-- wiki (OK)
-- auth (OK)
-- relatórios (OK)
-- sync (OK)
-- database checks (PARCIAL: UI desktop migrada para `DatabaseApplicationService`)
-- falhas/análises remanescentes (OK)
+Observacao: no desktop, a checagem de conectividade ja foi migrada para `DatabaseApplicationService`.
 
-## Status da migração de Config
+## Módulos já livres da facade
 
-- ConfigService (carregar/salvar config): **OK (migrado para core.config em `ui_main.py`)**
-- Cache cleanup (`limpar_cache_local`): **OK (migrado para `src/core/config/cache_service.py`)**
-- `CONFIG_FILE` no updater: **OK (migrado para `src/core/config/config_service.py`)**
+Modulos auditados e livres de dependencia direta da facade:
 
-## Dependências restantes da facade
+- `src/app_desktop/ui_main.py`
+- `src/app_desktop/threads.py`
+- `src/app_desktop/updater.py`
 
-### Alta prioridade
+Camadas migradas:
 
-- restante de helpers de banco ainda expostos via `legacy_facade` para compatibilidade (`conectar_banco`, `init_db`, `bootstrap_database`, `verificar_conexao_db`).
+- configuracao: `src/core/config/*`
+- analise/falhas: `LogAnalysisService`
+- auth: `AuthApplicationService`
+- wiki: `WikiService`
+- relatorios: `ReportApplicationService`
+- sync: `SyncApplicationService`
+- checagem de banco na UI: `DatabaseApplicationService`
 
-### Média prioridade
+## Plano final de remoção da facade
 
-- `src/app_desktop/threads.py` ainda referencia facade para compatibilidade estrutural de imports, apesar das chamadas críticas já migrarem por service.
+1. Redirecionar eventuais imports externos para services/core sem passar pela facade.
+2. Remover o reexport de `src/app_desktop/__init__.py` quando nao houver consumidores.
+3. Congelar `__all__` da facade apenas durante janela de compatibilidade.
+4. Remover `legacy_facade.py` na etapa final, apos uma release com telemetria/validacao de uso zero.
 
-### Baixa prioridade
+## Resumo de auditoria final
 
-- `src/app_desktop/__init__.py` com `from ...legacy_facade import *` (limpeza final quando facade deixar de ser porta de compatibilidade).
+Scripts executados:
 
-## Plano de eliminação da facade
+- `python scripts/find_facade_usage.py`
+- `python scripts/find_unused_facade_exports.py`
 
-1. Config
-2. FailureRepository direto
-3. Database helpers
-4. Utils restantes
+Resultado:
 
-## Resumo do script de varredura
-
-Script executado: `scripts/find_facade_usage.py`
-
-Resumo em `src/`:
-
-- 4 referencias diretas a `legacy_facade` (apos migracoes de config e falhas)
-- Arquivos detectados:
-  - `src/app_desktop/ui_main.py`
-  - `src/app_desktop/threads.py`
-  - `src/app_desktop/updater.py`
-  - `src/app_desktop/__init__.py`
+- dependencia direta da facade reduzida a pontos de compatibilidade
+- imports nao usados removidos de `ui_main.py` e `threads.py`
+- exportacoes da facade agora podem ser auditadas via script dedicado

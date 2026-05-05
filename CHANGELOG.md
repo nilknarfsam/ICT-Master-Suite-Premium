@@ -26,6 +26,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Chamadas de configuracao desktop migradas para core config service.
 - Chamadas de falhas/analises migradas para LogAnalysisService.
 - Verificacoes de banco migradas para DatabaseApplicationService.
+- Adicionada auditoria final de dependencias da legacy_facade.
 
 ## [0.1.0] - 2026-04-28
 

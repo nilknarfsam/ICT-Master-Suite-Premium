@@ -205,3 +205,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: teste de contrato com `pytest.importorskip("PyQt5")`.
 - Observacoes: sem botao novo e sem execucao automatica no startup.
 - Proximo passo: integrar opcionalmente o worker em acao manual da UI.
+
+### [2026-05-05] — [Fase 3.14B] — Reindexacao pela UI
+- Objetivo: disponibilizar reindexacao controlada diretamente na aba de configuracoes/admin sem alterar fluxo de busca.
+- Prompt aplicado/resumo: adicao do botao `🔄 Reindexar Logs` na UI com `ReindexThread` em background, bloqueio do botao durante execucao e feedback por `status_bar`/`QMessageBox`.
+- Arquivos principais: `src/app_desktop/ui_main.py`, `docs/FASE_3_INDEXACAO.md`, `CHANGELOG.md`.
+- Commit: pendente (a preencher apos commit do lote atual).
+- Testes/validacao: execucao de `scripts\dev_check.bat` e `python -m pytest tests`.
+- Observacoes: sem execucao automatica; scanner/busca legada mantidos com fallback.
+- Proximo passo: opcionalmente evoluir para barra de progresso na UI.

@@ -26,7 +26,7 @@ from src.application.services.wiki_service import WikiService
 from src.application.services.auth_application_service import AuthApplicationService
 from src.application.services.report_application_service import ReportApplicationService
 from src.application.services.sync_application_service import SyncApplicationService
-from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
+from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread, ReindexThread
 from src.app_desktop import updater
 
 def get_resource_path(relative_path):
@@ -378,6 +378,12 @@ class MainApp(QWidget):
         btn_salvar.setStyleSheet("background-color: #007bff; color: white; font-weight: bold; padding: 8px; font-size: 14px;")
         btn_salvar.clicked.connect(self.salvar_painel_config)
         form_layout.addWidget(btn_salvar, row, 0, 1, 2)
+        row += 1
+
+        self.btn_reindex_logs = QPushButton("🔄 Reindexar Logs")
+        self.btn_reindex_logs.setStyleSheet("background-color: #6c757d; color: white; font-weight: bold; padding: 8px; font-size: 14px;")
+        self.btn_reindex_logs.clicked.connect(self.iniciar_reindexacao_logs)
+        form_layout.addWidget(self.btn_reindex_logs, row, 0, 1, 2)
         
         layout.addWidget(frame)
         layout.addStretch()
@@ -404,6 +410,62 @@ class MainApp(QWidget):
         salvar_config(self.config)
         
         QMessageBox.information(self, "Sucesso", "Configurações Globais salvas com sucesso em 'ict_config.json'.\n\nPor favor, reinicie a aplicação para aplicar as novas rotas do Banco e Updater.")
+
+    def iniciar_reindexacao_logs(self):
+        if not self.requerer_login():
+            return
+        if not (self.usuario_logado and self.usuario_logado.get("is_admin", False)):
+            self.status_bar.setText("Ação disponível apenas para administradores.")
+            QMessageBox.warning(self, "Acesso Negado", "Apenas administradores podem reindexar logs.")
+            return
+
+        base_paths = [
+            self.config.get("caminho_logs_tri", "").strip(),
+            self.config.get("caminho_logs_agilent", "").strip(),
+            self.config.get("backup_local_dir", "").strip(),
+        ]
+        base_paths = [path for path in base_paths if path]
+
+        if not base_paths:
+            self.status_bar.setText("Reindexação não iniciada: caminhos não configurados.")
+            QMessageBox.warning(
+                self,
+                "Caminhos não configurados",
+                "Configure ao menos um diretório de logs (TRI, Agilent ou Backup Local) antes de reindexar.",
+            )
+            return
+
+        self.reindex_thread = ReindexThread(base_paths, rebuild=True)
+        self.reindex_thread.progress_msg.connect(self.status_bar.setText)
+        self.reindex_thread.finished_summary.connect(self.on_reindex_finished)
+        self.reindex_thread.failed.connect(self.on_reindex_failed)
+        self.btn_reindex_logs.setEnabled(False)
+        self.status_bar.setText("Iniciando reindexação em background...")
+        self.reindex_thread.start()
+
+    def on_reindex_finished(self, summary: dict):
+        if hasattr(self, "btn_reindex_logs"):
+            self.btn_reindex_logs.setEnabled(True)
+
+        total_indexado = summary.get("total_indexed", 0)
+        total_erros = summary.get("total_errors", 0)
+        self.status_bar.setText(f"Reindexação concluída. Indexados: {total_indexado} | Erros: {total_erros}")
+        QMessageBox.information(
+            self,
+            "Reindexação concluída",
+            f"Reindexação finalizada com sucesso.\n\nTotal indexado: {total_indexado}\nTotal erros: {total_erros}",
+        )
+
+    def on_reindex_failed(self, error: str):
+        if hasattr(self, "btn_reindex_logs"):
+            self.btn_reindex_logs.setEnabled(True)
+
+        self.status_bar.setText("Falha na reindexação de logs.")
+        QMessageBox.critical(
+            self,
+            "Erro na reindexação",
+            f"Falha ao reindexar logs em background.\n\nDetalhes: {error}",
+        )
 
     def setup_admin_tab(self):
         layout = QVBoxLayout(self.tab_admin)

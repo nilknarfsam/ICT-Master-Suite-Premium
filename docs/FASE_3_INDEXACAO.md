@@ -173,6 +173,28 @@ Contrato atual:
 
 Observacao: o worker foi apenas preparado e ainda nao esta conectado a botoes/fluxo automatico da UI.
 
+## Reindexacao pela UI
+
+A aba de `Configuracoes do Sistema` agora possui a acao manual `🔄 Reindexar Logs`, conectada ao `ReindexThread` em modo `rebuild=True`.
+
+Comportamento:
+
+- execucao apenas sob acao explicita do usuario (sem startup automatico)
+- validacao de permissao (usuario logado com perfil admin)
+- coleta de paths via config:
+  - `caminho_logs_tri`
+  - `caminho_logs_agilent`
+  - `backup_local_dir`
+- remocao de paths vazios antes de iniciar
+- thread em background com feedback em `status_bar` e `QMessageBox`
+- botao desabilitado durante o processamento para evitar disparos concorrentes
+
+Contrato de feedback na UI:
+
+- progresso: sinal `progress_msg` -> `status_bar.setText`
+- sucesso: sinal `finished_summary` -> resumo com `Total indexado` e `Total erros`
+- falha: sinal `failed` -> mensagem critica com detalhe do erro
+
 ## Proximos passos (ativacao progressiva)
 
 1. Construir indice em rotina controlada (manual/agendada).

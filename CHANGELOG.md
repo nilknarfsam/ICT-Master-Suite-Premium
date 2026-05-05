@@ -18,6 +18,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Parsing de metadata agora usa LogAnalysisService.
 - Salvamento de analise agora usa LogAnalysisService.
 - Leitura de analise agora usa LogAnalysisService.
+- Operacoes da wiki agora usam WikiService.
 
 ## [0.1.0] - 2026-04-28
 

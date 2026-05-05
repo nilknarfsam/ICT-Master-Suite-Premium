@@ -21,9 +21,10 @@ from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryA
 from src.app_desktop.legacy_facade import (carregar_config, salvar_config, salvar_falha_db, salvar_observacao, ler_observacao, 
                     obter_ultimas_analises, obter_estatisticas_progresso, limpar_analises_db, verificar_conexao_db, 
                     limpar_cache_local, buscar_historico_serial, validar_login, listar_usuarios, 
-                    cadastrar_usuario, deletar_usuario, atualizar_usuario, adicionar_modelo, listar_modelos, adicionar_solucao_wiki, buscar_solucoes_wiki, editar_modelo, gerar_relatorio_excel)
+                    cadastrar_usuario, deletar_usuario, atualizar_usuario, gerar_relatorio_excel)
 from src.application.services.log_search_service import LogSearchService
 from src.application.services.log_analysis_service import LogAnalysisService
+from src.application.services.wiki_service import WikiService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
 from src.app_desktop import updater
 
@@ -192,6 +193,7 @@ class MainApp(QWidget):
         self._last_purge_date = None
         self.log_search_service = LogSearchService()
         self.log_analysis_service = LogAnalysisService()
+        self.wiki_service = WikiService()
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
@@ -851,7 +853,7 @@ class MainApp(QWidget):
     def carregar_lista_modelos(self):
         """Popula o QListWidget com os modelos do banco de dados na inicialização."""
         self.lista_modelos.clear()
-        modelos = listar_modelos()
+        modelos = self.wiki_service.listar_modelos()
         for m in modelos:
             # Salvar o ID do modelo como userData é uma boa prática
             item = QListWidgetItem(m["nome"])
@@ -875,7 +877,7 @@ class MainApp(QWidget):
                 QMessageBox.warning(self, "Aviso", f"O modelo '{nome_modelo_upper}' já está cadastrado.")
                 return
 
-            novo_id = adicionar_modelo(nome_modelo_upper)
+            novo_id = self.wiki_service.adicionar_modelo(nome_modelo_upper)
             if novo_id:
                 self.carregar_lista_modelos()
                 # Seleciona o modelo recém criado
@@ -900,7 +902,7 @@ class MainApp(QWidget):
             if novo_nome_upper == nome_atual.upper():
                 return # Nenhuma alteração real
                 
-            if editar_modelo(id_modelo, novo_nome_upper):
+            if self.wiki_service.editar_modelo(id_modelo, novo_nome_upper):
                 self.carregar_lista_modelos()
                 # Tenta re-selecionar
                 items = self.lista_modelos.findItems(novo_nome_upper, Qt.MatchExactly)
@@ -931,7 +933,7 @@ class MainApp(QWidget):
         if self.rb_fct.isChecked(): fase_filtro = "FCT"
         busca_texto = self.input_busca_sintoma.text().strip()
 
-        solucoes = buscar_solucoes_wiki(modelo_id, fase_filtro if fase_filtro != "Todos" else None, busca_texto)
+        solucoes = self.wiki_service.buscar_solucoes(modelo_id, fase_filtro if fase_filtro != "Todos" else None, busca_texto)
         
         if solucoes:
             self.table_solucoes.setRowCount(len(solucoes))
@@ -983,7 +985,7 @@ class MainApp(QWidget):
             # Obtém o autor (logado ou Local)
             autor = self.usuario_logado['nome'] if self.usuario_logado else "Local"
             
-            resultado = adicionar_solucao_wiki(modelo_id, fase, sintoma, solucao, autor)
+            resultado = self.wiki_service.adicionar_solucao(modelo_id, fase, sintoma, solucao, autor)
             
             if resultado == "OFFLINE":
                 QMessageBox.warning(self, "Modo Offline", "Rede indisponível. Sua solução foi salva na fila local e será sincronizada assim que a rede voltar!")

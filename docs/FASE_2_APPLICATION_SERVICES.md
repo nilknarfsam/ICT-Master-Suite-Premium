@@ -69,6 +69,15 @@ No fluxo de UI em `src/app_desktop/ui_main.py`, a leitura de observacoes/analise
 
 Essa alteracao manteve retorno, tratamento de excecao e comportamento visual inalterados.
 
+## Wiki migrada para Application Service
+
+No fluxo de UI em `src/app_desktop/ui_main.py`, as operacoes da wiki passaram a usar `WikiService`.
+
+- antes: chamadas diretas de `listar_modelos`, `adicionar_modelo`, `editar_modelo`, `buscar_solucoes_wiki`, `adicionar_solucao_wiki`
+- agora: chamadas via `WikiService` (`listar_modelos`, `adicionar_modelo`, `editar_modelo`, `buscar_solucoes`, `adicionar_solucao`)
+
+A migracao preserva parametros, retornos, mensagens e comportamento visual.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

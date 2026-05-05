@@ -26,6 +26,7 @@ from src.application.services.log_analysis_service import LogAnalysisService
 from src.application.services.wiki_service import WikiService
 from src.application.services.auth_application_service import AuthApplicationService
 from src.application.services.report_application_service import ReportApplicationService
+from src.application.services.sync_application_service import SyncApplicationService
 from src.app_desktop.threads import BuscaThread, FileLoaderThread, DashboardThread
 from src.app_desktop import updater
 
@@ -198,6 +199,7 @@ class MainApp(QWidget):
         self.wiki_service = WikiService()
         self.auth_service = AuthApplicationService()
         self.report_service = ReportApplicationService()
+        self.sync_service = SyncApplicationService()
         
         self.usuario_logado = usuario_logado
         if self.config.get("lembrar_login") and self.config.get("ultimo_login"):
@@ -1425,8 +1427,7 @@ class MainApp(QWidget):
         
     def processar_sincronizacao_background(self):
         try:
-            from src.app_desktop.legacy_facade import sincronizar_fila_offline
-            sincronizar_fila_offline()
+            self.sync_service.sincronizar_fila_offline()
         except:
             pass
 

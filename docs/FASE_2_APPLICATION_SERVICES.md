@@ -96,6 +96,15 @@ No fluxo de UI em `src/app_desktop/ui_main.py`, a exportacao de relatorio Excel 
 
 A migracao manteve parametros, retorno e mensagens da UI inalterados.
 
+## Sincronizacao offline migrada para Application Service
+
+No fluxo de timer/background em `src/app_desktop/ui_main.py`, a chamada de sincronizacao offline passou a usar `SyncApplicationService`.
+
+- antes: chamada direta de `sincronizar_fila_offline()`
+- agora: `SyncApplicationService.sincronizar_fila_offline()`
+
+A migracao manteve o mesmo fluxo de timer, incluindo o bloco `try/except` existente.
+
 ## Proximos passos
 
 - Migrar chamadas pontuais de `ui_main.py` para services de `application` sem alterar comportamento.

@@ -33,6 +33,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Scanner preparado com limite inicial de resultados para reduzir carga em buscas extensas.
 - Busca de logs agora prepara resumo interno quando resultados sao limitados.
 - Status bar agora informa quando a busca foi limitada.
+- Adicionada estrutura inicial de indexacao local de logs.
 
 ## [0.1.0] - 2026-04-28
 

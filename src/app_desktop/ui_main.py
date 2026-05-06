@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QAbstractItemView, QRadioButton, QButtonGroup, QInputDialog, QListWidgetItem, QComboBox
 )
 from PyQt5.QtCore import Qt, QTimer, QDir
-from PyQt5.QtGui import QColor, QFont, QIcon
+from PyQt5.QtGui import QColor, QFont, QIcon, QGuiApplication
 from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryAxis, QValueAxis, QPieSeries, QPieSlice
 
 from src.core.config.config_service import carregar_config, salvar_config
@@ -165,7 +165,21 @@ class MainApp(QWidget):
         super().__init__()
         self.setWindowTitle("ICT Master Suite - V5.3 (Polished UI)")
         self.setWindowIcon(QIcon(get_resource_path('icon.ico')))
-        self.setGeometry(100, 100, 1280, 800)
+        # Geometria responsiva baseada em availableGeometry (respeita barra de tarefas).
+        # Centraliza na tela primaria com fallback seguro caso primaryScreen() falhe.
+        try:
+            screen = QGuiApplication.primaryScreen()
+        except Exception:
+            screen = None
+        if screen is not None:
+            avail = screen.availableGeometry()
+            width = min(1280, max(900, avail.width() - 40))
+            height = min(820, max(600, avail.height() - 40))
+            x = avail.x() + (avail.width() - width) // 2
+            y = avail.y() + (avail.height() - height) // 2
+            self.setGeometry(x, y, width, height)
+        else:
+            self.setGeometry(100, 100, 1280, 800)
         self.config = carregar_config()
         startup_mark("MainApp.__init__: config carregada")
         
@@ -292,10 +306,9 @@ class MainApp(QWidget):
         main_layout.addLayout(h)
 
         self.tabs = QTabWidget()
-        # Aba Dashboard Premium (lazy load)
+        # Aba Dashboard Premium (lazy load) — instanciada agora, adicionada por ultimo
         self.tab_dashboard = QWidget()
-        self.tabs.addTab(self.tab_dashboard, "📊 Dashboard")
-        # Aba Finder
+        # Aba Finder (prioritaria)
         self.tab_finder = QWidget()
         self.setup_finder()
         self.tabs.addTab(self.tab_finder, "🔍 Finder Logs")
@@ -303,7 +316,7 @@ class MainApp(QWidget):
         # Aba Base de Conhecimento (Wiki)
         self.tab_dash = QWidget()
         self.setup_knowledge_base()
-        self.tabs.addTab(self.tab_dash, "� Base de Conhecimento")
+        self.tabs.addTab(self.tab_dash, "📚 Base de Conhecimento")
 
         # Aba Histórico
         self.tab_history = QWidget()
@@ -319,6 +332,9 @@ class MainApp(QWidget):
         self.tab_config = QWidget()
         self.setup_config_tab()
         self.tabs.addTab(self.tab_config, "⚙️ Configurações do Sistema")
+
+        # Dashboard adicionado por ultimo (lazy load mantido)
+        self.tabs.addTab(self.tab_dashboard, "📊 Dashboard")
         
         # Esconde as abas se não for admin
         is_admin = bool(self.usuario_logado and self.usuario_logado.get('is_admin', False))
@@ -1171,7 +1187,7 @@ class MainApp(QWidget):
         frame_left = QFrame()
         l_left = QVBoxLayout(frame_left)
         l_left.setContentsMargins(0,0,0,0)
-        lbl_hist = QLabel("Histórico (Recentes):")
+        lbl_hist = QLabel("Logs encontrados:")
         lbl_hist.setObjectName("lbl_hist")
         l_left.addWidget(lbl_hist)
         self.list_logs = QListWidget()
@@ -1182,11 +1198,11 @@ class MainApp(QWidget):
         frame_right = QFrame()
         self.l_right = QVBoxLayout(frame_right)
         self.l_right.setContentsMargins(0,0,0,0)
-        self.lbl_info = QLabel("Selecione um arquivo.")
+        self.lbl_info = QLabel("Selecione um log para visualizar.")
         self.lbl_info.setObjectName("lbl_info")
         self.lbl_info.setWordWrap(True)
         self.l_right.addWidget(self.lbl_info)
-        lbl_log = QLabel("Log do Arquivo:")
+        lbl_log = QLabel("Visualização do Log:")
         lbl_log.setObjectName("lbl_log")
         self.l_right.addWidget(lbl_log)
         self.text_raw = QTextEdit()
@@ -1207,6 +1223,10 @@ class MainApp(QWidget):
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.l_right.addWidget(self.table)
+        # Painel TRI ocultado visualmente nesta rodada (parser e populate continuam intactos).
+        # Reativacao trivial via toggle em fase futura (4.4 - Log Viewer Premium).
+        self.lbl_table_title.setVisible(False)
+        self.table.setVisible(False)
 
         # Alerta de Histórico Colaborativo
         self.lbl_historico_alerta = QLabel("")
@@ -1229,15 +1249,20 @@ class MainApp(QWidget):
         self.txt_observacao = QTextEdit()
         self.txt_observacao.setPlaceholderText("Digite sua nova análise aqui...")
         self.txt_observacao.setObjectName("txt_observacao")
-        self.txt_observacao.setFixedHeight(60)
+        self.txt_observacao.setMinimumHeight(90)
         self.l_right.addWidget(self.txt_observacao)
 
         self.btn_salvar_obs = QPushButton("📤 Adicionar ao Histórico")
         self.btn_salvar_obs.clicked.connect(self.salvar_analise_tecnico)
         self.l_right.addWidget(self.btn_salvar_obs)
-        
+
+        # Distribuicao vertical: log domina, historico ocupa espaco secundario,
+        # campo de nova analise mantem altura minima e cresce sob demanda.
+        self.l_right.setStretchFactor(self.text_raw, 3)
+        self.l_right.setStretchFactor(self.txt_historico_chat, 2)
+
         splitter.addWidget(frame_right)
-        splitter.setSizes([300, 800])
+        splitter.setSizes([320, 980])
         layout.addWidget(splitter)
         
         
@@ -1275,15 +1300,31 @@ class MainApp(QWidget):
         self.thread_busca.start()
         
     def popular_lista(self, arquivos):
-        # ... (código existente, sem alterações)
+        # Lista ordenada por data de modificacao desc, com label amigavel
+        # ("YYYY-MM-DD HH:MM - nome"). O nome canonico fica em Qt.UserRole
+        # para preservar o lookup em arquivos_mapa.
         self.arquivos_mapa.clear()
         self.list_logs.clear()
         if not arquivos:
             self.lbl_info.setText("Nenhum arquivo encontrado.")
             self.status_bar.setText("0 encontrados.")
             return
+        arquivos_com_mtime = []
         for nome, caminho in arquivos:
-            self.list_logs.addItem(nome)
+            try:
+                mtime = os.path.getmtime(caminho)
+            except OSError:
+                mtime = 0
+            arquivos_com_mtime.append((nome, caminho, mtime))
+        arquivos_com_mtime.sort(key=lambda x: x[2], reverse=True)
+        for nome, caminho, mtime in arquivos_com_mtime:
+            if mtime > 0:
+                label = f"{datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M')} - {nome}"
+            else:
+                label = nome
+            item = QListWidgetItem(label)
+            item.setData(Qt.UserRole, nome)
+            self.list_logs.addItem(item)
             self.arquivos_mapa[nome] = caminho
         self.status_bar.setText(f"{len(arquivos)} arquivos encontrados.")
 
@@ -1291,10 +1332,11 @@ class MainApp(QWidget):
         self.status_bar.setText(self.log_search_service.build_summary_message(summary))
         
     def carregar_arquivo(self):
-        # ... (código existente, sem alterações)
+        # Usa Qt.UserRole para lookup canonico em arquivos_mapa,
+        # com fallback para item.text() preservando compatibilidade.
         item = self.list_logs.currentItem()
         if not item: return
-        nome = item.text()
+        nome = item.data(Qt.UserRole) or item.text()
         if nome == self.current_file_name: return
         caminho = self.arquivos_mapa.get(nome)
         if not caminho:
@@ -1328,8 +1370,9 @@ class MainApp(QWidget):
             self.text_raw.setPlainText(content)
         
         is_tri = meta['tipo'] == 'TRI'
-        self.table.setVisible(is_tri)
-        self.lbl_table_title.setVisible(is_tri)
+        # Painel TRI mantido oculto nesta rodada; parser/populate continuam ativos.
+        self.table.setVisible(False)
+        self.lbl_table_title.setVisible(False)
         if is_tri:
             self.popular_tabela_tri(content)
         

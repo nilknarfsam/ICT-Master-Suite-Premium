@@ -185,6 +185,7 @@ Se algum teste pre-existente falhar fora do escopo, registrar claramente no rela
 |---------|--------|--------|------|
 | 4.1 Foundation UI | Concluida | `40ca754` | 2026-05-06 |
 | 4.2 Dashboard Premium | Concluida | `pendente (preencher apos commit da 4.2)` | 2026-05-06 |
+| 4.2.1 Pre-4.3 Operational Refinement | Concluida | `pendente (refactor(ui): prioritize finder logs workspace)` | 2026-05-06 |
 | 4.3 Search Experience Premium | Pendente | — | — |
 | 4.4 Log Viewer Premium | Pendente | — | — |
 | 4.5 System UX | Pendente | — | — |
@@ -193,6 +194,32 @@ Se algum teste pre-existente falhar fora do escopo, registrar claramente no rela
 | 4.8 Final UI Stabilization | Pendente | — | — |
 
 A tabela e atualizada pelo executor a cada commit local; o status passa por `Pendente -> Em execucao -> Concluida`.
+
+### 7.1 Rodada operacional pos-4.2 (entrega 4.2.1)
+
+Rodada **nao formal** (nao renumera subfases): refinamento operacional pos-4.2,
+preparando o workspace para a Subfase 4.3. Detalhes completos em
+[`PHASE_4_3_SEARCH_EXPERIENCE_PREP.md`](PHASE_4_3_SEARCH_EXPERIENCE_PREP.md).
+
+Escopo entregue:
+
+- Reordenacao de abas: `Finder Logs, Wiki, Historico, Admin, Config, Dashboard`.
+- Geometria responsiva via `QGuiApplication.primaryScreen().availableGeometry()`
+  com fallback explicito.
+- Painel "Detalhamento de Defeitos (TRI)" ocultado visualmente
+  (parser e populate intactos).
+- Mais espaco vertical no Finder (splitter `[320, 980]`, `setStretchFactor`,
+  `txt_observacao` com `setMinimumHeight(90)`).
+- Lista de logs ordenada por `mtime` desc com label
+  `"YYYY-MM-DD HH:MM - nome"` (nome canonico em `Qt.UserRole`).
+- Textos amigaveis ("Logs encontrados:", "Selecione um log para visualizar.",
+  "Visualizacao do Log:").
+- Documentacao: `CHANGELOG.md`, `PROJECT_EVOLUTION_LOG.md`,
+  `PHASE_4_3_SEARCH_EXPERIENCE_PREP.md` (novo).
+- Commit local unico: `refactor(ui): prioritize finder logs workspace`.
+
+Itens nao tocados: `threads.py`, application services, core, parsers, esquema
+SQLite, entregas das fases 4.1/4.2.
 
 ## 8. Diagrama de dependencias
 

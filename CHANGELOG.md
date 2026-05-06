@@ -55,6 +55,15 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada foundation visual reutilizavel para UI Premium PyQt5 (themes, widgets, layouts, theme_loader).
 - Adicionada aba Dashboard premium com cards de metricas, atividade recente e ViewModel desacoplado.
 
+### Changed
+
+- Reordenadas abas principais (Finder Logs primeiro, Dashboard por ultimo).
+- Ajustado tamanho/posicao inicial da janela para respeitar a area util do Windows (`availableGeometry`).
+- Reorganizado Finder Logs com mais espaco para log/historico/analise (splitter 320/980, stretch e min-height).
+- Lista de logs encontrados ordenada por data decrescente com timestamp visivel (`YYYY-MM-DD HH:MM`).
+- Painel "Detalhamento de Defeitos (TRI)" ocultado visualmente (parser e populate preservados).
+- Textos do Finder Logs atualizados ("Logs encontrados:", "Selecione um log para visualizar.", "Visualizacao do Log:").
+
 ## [0.1.0] - 2026-04-28
 
 ### Added

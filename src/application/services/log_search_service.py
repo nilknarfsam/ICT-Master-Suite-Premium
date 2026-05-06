@@ -1,3 +1,5 @@
+import time
+
 from src.application.dtos.search_options import SearchOptions
 from src.application.services.log_index_application_service import LogIndexApplicationService
 
@@ -73,3 +75,19 @@ class LogSearchService:
             if self.should_include_file(item[0], term, options)
         ]
         return self.limit_results(filtered, options)
+
+    def timed_search_with_index(self, term: str, options: SearchOptions):
+        """Wrapper de medicao para diagnostico de performance.
+
+        Mede o tempo total da execucao de `search_with_index` e devolve um par
+        `(resultado, tempo_ms)`, sem alterar o contrato de `search_with_index`.
+
+        Util para `scripts/benchmark_search.py` e para registro de baseline em
+        `docs/BASELINE_BUSCA.md`. Nao e consumido pela UI.
+        """
+        start = time.perf_counter()
+        try:
+            results = self.search_with_index(term, options)
+        finally:
+            elapsed_ms = (time.perf_counter() - start) * 1000.0
+        return results, elapsed_ms

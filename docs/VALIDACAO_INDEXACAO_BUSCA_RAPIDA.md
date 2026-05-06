@@ -58,6 +58,14 @@ Executar um checklist real para validar indexacao, reindexacao pela UI, busca hi
 - [ ] Validar total final indexado ao fim da rotina.
 - [ ] Registrar tempos aproximados de cada execucao.
 
+## G) Baseline quantitativo
+
+- [ ] Rodar `python scripts/benchmark_search.py --term <serial> --repeat 5` (apenas modo index).
+- [ ] Rodar `python scripts/benchmark_search.py --term <serial> --repeat 5 --include-scanner --write docs/BASELINE_BUSCA.md`.
+- [ ] Conferir que o relatorio foi anexado em `docs/BASELINE_BUSCA.md`.
+- [ ] Confirmar `mean_ms` do modo `index` menor que do modo `scanner`.
+- [ ] Anotar `mean_ms`, `median_ms` e `p95_ms` para os dois modos.
+
 ## F) Criterios de aprovacao
 
 - [ ] App abre corretamente.
@@ -65,6 +73,7 @@ Executar um checklist real para validar indexacao, reindexacao pela UI, busca hi
 - [ ] Busca indexada funciona com `Busca rapida:`.
 - [ ] Fallback para scanner funciona com `Busca em rede:`.
 - [ ] Salvamento de analise continua funcionando.
+- [ ] Baseline coletado e anexado em `docs/BASELINE_BUSCA.md`.
 
 ## Registro da execucao
 

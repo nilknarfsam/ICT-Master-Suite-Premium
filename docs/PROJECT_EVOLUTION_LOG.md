@@ -253,3 +253,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: validacao apenas documental; sem alteracao de codigo, UI ou legado.
 - Observacoes: documento serve como referencia executiva continua; atualizacoes futuras devem ser editadas diretamente no master plan.
 - Proximo passo: usar o master plan para priorizar a proxima execucao tecnica (medicao de baseline da busca indexada e fechamento da Fase 3).
+
+### [2026-05-06] — [Fase 3.16] — Metricas leves e baseline reproduzivel da busca hibrida
+- Objetivo: fornecer dados objetivos para fechar a Fase 3 antes de iniciar a Fase 4 UI Premium, sem alterar UI nem contratos publicos.
+- Prompt aplicado/resumo: adicionado wrapper de medicao `timed_search_with_index` em `LogSearchService` (usando `time.perf_counter()`); criado `scripts/benchmark_search.py` com modos `index` e `scanner`, repeticoes configuraveis e estatisticas (mean/median/p95); criado `docs/BASELINE_BUSCA.md` para registro de evidencias e atualizado checklist operacional com etapa de baseline quantitativo.
+- Arquivos principais: `src/application/services/log_search_service.py`, `tests/application/test_log_search_metrics.py`, `scripts/benchmark_search.py`, `docs/BASELINE_BUSCA.md`, `docs/VALIDACAO_INDEXACAO_BUSCA_RAPIDA.md`, `CHANGELOG.md`, `docs/MASTER_EXECUTION_PLAN.md`.
+- Commit: pendente (a preencher apos commit do lote atual).
+- Testes/validacao: 4 novos testes em `tests/application/test_log_search_metrics.py` cobrindo retorno (resultado, tempo), fallback `None`, filtro/limite e propagacao de excecao; smoke run do benchmark em modo index sem erros.
+- Observacoes: nenhum comportamento publico alterado; `search_with_index` 100% compativel; nenhum import novo na UI; nenhum codigo legado tocado.
+- Proximo passo: rodar `scripts/benchmark_search.py --include-scanner --write docs/BASELINE_BUSCA.md` em ambiente real e marcar checklist `Aprovado` em pelo menos 2 ambientes para fechar Fase 3.

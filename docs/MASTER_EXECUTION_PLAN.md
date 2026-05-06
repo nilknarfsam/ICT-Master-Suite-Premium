@@ -182,7 +182,7 @@ Mapeados como riscos relevantes, mas sem alterar nada agora:
   - tempo medio de busca via index
   - tempo medio de busca via scanner
   - taxa de fallback (quantas buscas caem no scanner)
-- Adicionar metricas leves no `LogSearchService` (sem alterar contrato da UI).
+- Adicionar metricas leves no `LogSearchService` (sem alterar contrato da UI). [Concluido em 2026-05-06 — Fase 3.16: `timed_search_with_index`, `scripts/benchmark_search.py`, `docs/BASELINE_BUSCA.md`.]
 - Criar agendamento opcional de reindex (timer/cron Windows), apenas com flag explicita.
 - Critterio de saida: 2 execucoes consecutivas do checklist `Aprovado` em ambientes distintos.
 

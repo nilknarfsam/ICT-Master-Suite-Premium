@@ -102,6 +102,7 @@ O script executa:
 Para validacao manual operacional, use o checklist:
 
 - `docs/SMOKE_TEST_DESKTOP.md`
+- `docs/VALIDACAO_INDEXACAO_BUSCA_RAPIDA.md` (indexacao, reindexacao UI, busca hibrida e fallback)
 
 ## Indexacao manual de logs
 

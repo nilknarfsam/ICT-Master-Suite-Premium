@@ -235,3 +235,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 ### [2026-05-05] — [Dev UX] — Runtime artifacts ignored
 - Objetivo: evitar ruído de arquivos gerados em runtime no `git status`.
 - Resumo técnico: atualização do `.gitignore` para ignorar `crash_log.txt` e `src/core/config/ict_config.json`.
+
+### [2026-05-05] — [Fase 3.15] — Checklist real de validacao da busca rapida
+- Objetivo: consolidar roteiro operacional para validar indexacao, reindexacao via UI, busca hibrida e fallback antes da etapa Electron/React.
+- Prompt aplicado/resumo: criado checklist manual em documento dedicado, com etapas A-F, criterios de aprovacao e espaco para registro de execucao.
+- Arquivos principais: `docs/VALIDACAO_INDEXACAO_BUSCA_RAPIDA.md`, `README.md`, `CHANGELOG.md`.
+- Commit: pendente (a preencher apos commit do lote atual).
+- Testes/validacao: execucao manual guiada pelo checklist e validacao por script de indexacao (`build_log_index.py`).
+- Observacoes: nenhum codigo funcional/UI/legado foi alterado; foco exclusivo em documentacao operacional.
+- Proximo passo: executar checklist em ambiente real e anexar evidencias de tempo, totais e erros.

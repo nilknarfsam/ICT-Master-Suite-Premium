@@ -47,6 +47,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionada instrumentacao de startup e preparacao para otimizacao de abertura.
 - Adicionados scripts de execucao Windows para app desktop premium.
 - Ignorados artefatos locais de runtime no controle de versao.
+- Adicionado checklist operacional de validacao da indexacao e busca rapida.
 
 ## [0.1.0] - 2026-04-28
 

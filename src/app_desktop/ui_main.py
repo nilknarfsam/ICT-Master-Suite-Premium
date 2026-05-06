@@ -239,6 +239,17 @@ class MainApp(QWidget):
         QTimer.singleShot(0, self._run_post_startup_tasks)
 
     def load_stylesheet(self):
+        # Tentativa 1: tema combinado novo (themes/base.qss + themes/light.qss).
+        # Em qualquer falha (arquivo ausente, conteudo vazio, excecao),
+        # cai para o style.qss legado para preservar comportamento atual.
+        try:
+            from src.app_desktop.themes.theme_loader import load_combined_theme
+            combined = load_combined_theme("light")
+            if combined and combined.strip():
+                self.setStyleSheet(combined)
+                return
+        except Exception as e:
+            print(f"Erro ao carregar tema combinado: {e}")
         try:
             style_path = get_resource_path("style.qss")
             with open(style_path, "r", encoding="utf-8") as f:

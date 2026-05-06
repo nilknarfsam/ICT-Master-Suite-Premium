@@ -52,6 +52,7 @@ Todas as mudancas relevantes desta versao premium serao registradas neste arquiv
 - Adicionado script `scripts/benchmark_search.py` para baseline reproduzivel de busca (index x scanner).
 - Adicionado documento `docs/BASELINE_BUSCA.md` para registro de evidencias do baseline.
 - Atualizado checklist de validacao com etapa G de baseline quantitativo.
+- Adicionada foundation visual reutilizavel para UI Premium PyQt5 (themes, widgets, layouts, theme_loader).
 
 ## [0.1.0] - 2026-04-28
 

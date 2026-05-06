@@ -1,0 +1,132 @@
+/* light.qss
+ *
+ * Premium light theme for ICT Master Suite Premium.
+ *
+ * Targets only semantic selectors introduced by the new foundation
+ * widgets (PrimaryButton, Card, StatusBadge, ProgressOverlay,
+ * MasterDetailLayout). Legacy objectName-based selectors continue
+ * to be served by src/app_desktop/style.qss to avoid regressions in
+ * non-migrated screens.
+ *
+ * Values mirror src/app_desktop/themes/tokens.py.
+ *
+ * Header references map QSS rules to token keys.
+ */
+
+/* === PrimaryButton === tokens: COLORS.primary, COLORS.primary_hover */
+QPushButton[role="primary"] {
+    background-color: #2563eb;
+    color: #ffffff;
+    border: 1px solid #2563eb;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+QPushButton[role="primary"]:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+QPushButton[role="primary"]:pressed {
+    background-color: #1e40af;
+    border-color: #1e40af;
+}
+QPushButton[role="primary"]:disabled {
+    background-color: #93c5fd;
+    border-color: #93c5fd;
+    color: #f1f5f9;
+}
+
+/* === Card === tokens: COLORS.bg_card, COLORS.border, RADIUS.lg */
+QFrame#card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QFrame#card[hoverable="true"]:hover {
+    border-color: #2563eb;
+}
+
+/* === StatusBadge === tokens: STATUS_COLORS, RADIUS.md */
+QLabel[badge="pass"] {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+QLabel[badge="fail"] {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+QLabel[badge="warning"] {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+QLabel[badge="info"] {
+    background-color: #cffafe;
+    color: #155e75;
+    border: 1px solid #67e8f9;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+QLabel[badge="neutral"] {
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+
+/* === ProgressOverlay === tokens: COLORS.bg_card, COLORS.border, RADIUS.lg */
+QWidget#progressOverlay {
+    background-color: rgba(15, 23, 42, 140);
+}
+QFrame#progressOverlayCard {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QLabel#progressOverlayMessage {
+    color: #0f172a;
+    font-weight: bold;
+}
+QProgressBar#progressOverlayBar {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background-color: #f1f5f9;
+    text-align: center;
+    color: #0f172a;
+    min-height: 14px;
+}
+QProgressBar#progressOverlayBar::chunk {
+    background-color: #2563eb;
+    border-radius: 4px;
+}
+
+/* === MasterDetailLayout === tokens: COLORS.border */
+QSplitter#masterDetailSplitter::handle {
+    background-color: #e2e8f0;
+}
+QSplitter#masterDetailSplitter::handle:horizontal {
+    width: 4px;
+}
+QSplitter#masterDetailSplitter::handle:vertical {
+    height: 4px;
+}
+QWidget#masterArea {
+    background-color: #f8fafc;
+}
+QWidget#detailArea {
+    background-color: #ffffff;
+}

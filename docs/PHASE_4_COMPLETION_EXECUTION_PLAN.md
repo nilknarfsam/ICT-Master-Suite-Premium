@@ -184,7 +184,7 @@ Se algum teste pre-existente falhar fora do escopo, registrar claramente no rela
 | Subfase | Status | Commit | Data |
 |---------|--------|--------|------|
 | 4.1 Foundation UI | Concluida | `40ca754` | 2026-05-06 |
-| 4.2 Dashboard Premium | Pendente | — | — |
+| 4.2 Dashboard Premium | Concluida | `pendente (preencher apos commit da 4.2)` | 2026-05-06 |
 | 4.3 Search Experience Premium | Pendente | — | — |
 | 4.4 Log Viewer Premium | Pendente | — | — |
 | 4.5 System UX | Pendente | — | — |

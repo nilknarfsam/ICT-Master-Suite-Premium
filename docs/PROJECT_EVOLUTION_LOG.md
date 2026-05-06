@@ -298,3 +298,12 @@ Este arquivo registra a evolucao tecnica do projeto Premium, incluindo prompts a
 - Testes/validacao: nao se aplica nesta tarefa de planejamento.
 - Observacoes: este documento e a fonte de verdade para a execucao das subfases 4.2 a 4.8; cada subfase entrega 1 commit local; nenhum push e executado pelo agente; o usuario fara push manualmente.
 - Proximo passo: executar Subfase 4.2 (Dashboard Premium) seguindo `docs/PHASE_4_2_DASHBOARD_PREMIUM_PLAN.md` na mesma sessao.
+
+### [2026-05-06] — [Fase 4.2] — Dashboard Premium
+- Objetivo: implementar a nova aba Dashboard Premium em arquitetura MVVM (Page + ViewModel + Worker + Snapshot), com lazy load seguro e sem alterar contratos de threads/services.
+- Prompt aplicado/resumo: ampliado `themes/light.qss` com seletores semanticos do dashboard; criados `DashboardSnapshot`, `DashboardLoaderWorker`, `DashboardViewModel`; criados widgets de dashboard (`DashboardHeader`, `MetricCard`, `StatusCard`, `RecentActivityPanel`, `SearchSummaryPanel`, `DashboardGrid`, `EmptyState`, `LoadingState`, `SectionTitle`, `QuickActionsPanel`); criada `DashboardPage`; integrada nova aba em `ui_main.py` com lazy load em `currentChanged` e cleanup no `closeEvent`; criados testes de dashboard em `tests/app_desktop/dashboard/` (snapshot, worker, viewmodel, imports e page smoke).
+- Arquivos principais: `src/app_desktop/themes/light.qss`, `src/app_desktop/viewmodels/dashboard/{dashboard_snapshot.py,dashboard_loader_worker.py,dashboard_viewmodel.py}`, `src/app_desktop/widgets/dashboard/*`, `src/app_desktop/pages/dashboard/dashboard_page.py`, `src/app_desktop/ui_main.py`, `tests/app_desktop/dashboard/*`, `docs/PHASE_4_2_DASHBOARD_PREMIUM_PLAN.md`, `docs/PHASE_4_COMPLETION_EXECUTION_PLAN.md`, `CHANGELOG.md`, `docs/PROJECT_EVOLUTION_LOG.md`.
+- Commit: pendente (a preencher apos commit local da 4.2).
+- Testes/validacao: pendente executar `scripts\\dev_check.bat` e `python -m pytest tests/app_desktop tests/application tests/core --tb=short`.
+- Observacoes: `DashboardThread` em `src/app_desktop/threads.py` permaneceu intocada; `style.qss` legado permaneceu preservado como fallback; nenhuma alteracao em `legacy/`, banco, core ou contratos publicos de application services.
+- Proximo passo: rodar validacoes da subfase 4.2, preencher hash do commit e iniciar planejamento/execucao da subfase 4.3 (Search Experience Premium).

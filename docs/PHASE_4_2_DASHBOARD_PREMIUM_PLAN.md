@@ -2,6 +2,8 @@
 
 Planejamento completo da segunda subfase da Fase 4 (UI Premium PyQt5). Este documento e a fonte de verdade para a implementacao da pagina de dashboard, que sera executada em rodada posterior. Nao executa codigo nesta etapa.
 
+Status de execucao: Concluida em 2026-05-06 (implementacao realizada; commit local registrado no PROJECT_EVOLUTION_LOG).
+
 Em conformidade com [docs/PHASE_4_UI_PREMIUM_PLAN.md](PHASE_4_UI_PREMIUM_PLAN.md) (secao 11.4.2 e guidelines da secao 12) e com o estado atual ja consolidado na Subfase 4.1 (`themes/`, `widgets/`, `layouts/`, `theme_loader`).
 
 ## 1. Objetivo da Subfase 4.2

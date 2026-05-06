@@ -20,6 +20,7 @@ from PyQt5.QtChart import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryA
 from src.core.config.config_service import carregar_config, salvar_config
 from src.core.config.cache_service import limpar_cache_local
 from src.application.services.log_search_service import LogSearchService
+from src.application.services.log_index_application_service import LogIndexApplicationService
 from src.application.services.log_analysis_service import LogAnalysisService
 from src.application.services.database_application_service import DatabaseApplicationService
 from src.application.services.wiki_service import WikiService
@@ -193,6 +194,7 @@ class MainApp(QWidget):
         self.current_file_name = None
         self._last_purge_date = None
         self.log_search_service = LogSearchService()
+        self.log_index_service = LogIndexApplicationService()
         self.log_analysis_service = LogAnalysisService()
         self.database_service = DatabaseApplicationService()
         self.wiki_service = WikiService()
@@ -209,6 +211,8 @@ class MainApp(QWidget):
                     self.usuario_logado = usr
 
         self.logout_solicitado = False
+        self._dashboard_page = None
+        self.tab_dashboard = None
         
         # Motor de Sincronização (Store-and-Forward)
         self.timer_sync = QTimer(self)
@@ -288,6 +292,9 @@ class MainApp(QWidget):
         main_layout.addLayout(h)
 
         self.tabs = QTabWidget()
+        # Aba Dashboard Premium (lazy load)
+        self.tab_dashboard = QWidget()
+        self.tabs.addTab(self.tab_dashboard, "📊 Dashboard")
         # Aba Finder
         self.tab_finder = QWidget()
         self.setup_finder()
@@ -318,6 +325,7 @@ class MainApp(QWidget):
         if not is_admin:
             self.tabs.setTabVisible(self.tabs.indexOf(self.tab_admin), False)
             self.tabs.setTabVisible(self.tabs.indexOf(self.tab_config), False)
+        self.tabs.currentChanged.connect(self._on_tab_changed_for_dashboard)
         
         main_layout.addWidget(self.tabs)
 
@@ -486,6 +494,55 @@ class MainApp(QWidget):
             "Erro na reindexação",
             f"Falha ao reindexar logs em background.\n\nDetalhes: {error}",
         )
+
+    def _on_tab_changed_for_dashboard(self, index):
+        if not self.tab_dashboard:
+            return
+        if index != self.tabs.indexOf(self.tab_dashboard):
+            return
+        if self._dashboard_page is not None:
+            return
+        try:
+            from src.app_desktop.pages.dashboard.dashboard_page import DashboardPage
+
+            is_admin = bool(self.usuario_logado and self.usuario_logado.get("is_admin", False))
+            self._dashboard_page = DashboardPage(
+                self.log_analysis_service,
+                self.log_index_service,
+                is_admin=is_admin,
+                parent=self.tab_dashboard,
+            )
+            self._dashboard_page.quickActionRequested.connect(self._on_dashboard_quick_action)
+            layout = QVBoxLayout(self.tab_dashboard)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(0)
+            layout.addWidget(self._dashboard_page)
+        except Exception as e:
+            print(f"Falha ao inicializar Dashboard Premium: {e}")
+            self.status_bar.setText("Dashboard indisponivel.")
+            self.tabs.setTabVisible(self.tabs.indexOf(self.tab_dashboard), False)
+
+    def _on_dashboard_quick_action(self, name: str):
+        if name == "open_finder":
+            self.tabs.setCurrentWidget(self.tab_finder)
+            return
+        if name == "open_wiki":
+            self.tabs.setCurrentWidget(self.tab_dash)
+            return
+        if name == "open_config":
+            if self.usuario_logado and self.usuario_logado.get("is_admin", False):
+                self.tabs.setCurrentWidget(self.tab_config)
+            return
+        if name == "reindex":
+            if not (self.usuario_logado and self.usuario_logado.get("is_admin", False)):
+                QMessageBox.warning(self, "Acesso negado", "Apenas administradores podem reindexar logs.")
+                return
+            self.tabs.setCurrentWidget(self.tab_config)
+            QMessageBox.information(
+                self,
+                "Atalho de Dashboard",
+                "Use o botao 'Reindexar Logs' na aba Configuracoes para executar a reindexacao completa.",
+            )
 
     def setup_admin_tab(self):
         layout = QVBoxLayout(self.tab_admin)
@@ -1565,6 +1622,11 @@ class MainApp(QWidget):
         return False
 
     def closeEvent(self, e):
+        if self._dashboard_page is not None:
+            try:
+                self._dashboard_page.shutdown()
+            except Exception:
+                pass
         if self.logout_solicitado:
             e.accept()  # Permite que a janela feche para o loop do __main__ reiniciar
         elif self.config.get("keep_in_tray", True) and self.tray_icon.isVisible():

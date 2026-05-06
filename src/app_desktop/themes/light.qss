@@ -130,3 +130,177 @@ QWidget#masterArea {
 QWidget#detailArea {
     background-color: #ffffff;
 }
+
+/* =====================================================================
+ * Dashboard Premium (Subfase 4.2)
+ * Selectors semanticos consumidos por widgets/dashboard/, viewmodels/dashboard/
+ * e pages/dashboard/. Valores alinhados com themes/tokens.py.
+ * ===================================================================== */
+
+/* === DashboardPage container === */
+QWidget#dashboardPage {
+    background-color: #f4f7f6;
+}
+
+/* === SectionTitle === tokens: FONT.size_lg, COLORS.text_primary, COLORS.text_muted */
+QLabel#sectionTitleText {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0f172a;
+}
+QLabel#sectionTitleSubtitle {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* === DashboardHeader === tokens: FONT.size_xxl, COLORS.text_primary, COLORS.text_muted */
+QFrame#dashboardHeader {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QLabel#dashboardHeaderTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f172a;
+}
+QLabel#dashboardHeaderSubtitle {
+    font-size: 12px;
+    color: #475569;
+}
+
+/* === MetricCard === tokens: FONT.size_md, FONT.size_xl, COLORS.text_primary, COLORS.text_muted */
+QFrame#metricCard {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QFrame#metricCard QLabel[role="metric-title"] {
+    font-size: 13px;
+    color: #475569;
+    font-weight: bold;
+}
+QFrame#metricCard QLabel[role="metric-value"] {
+    font-size: 28px;
+    color: #0f172a;
+    font-weight: bold;
+}
+QFrame#metricCard QLabel[role="metric-caption"] {
+    font-size: 11px;
+    color: #94a3b8;
+}
+QFrame#metricCard[tone="positive"] QLabel[role="metric-value"] {
+    color: #16a34a;
+}
+QFrame#metricCard[tone="negative"] QLabel[role="metric-value"] {
+    color: #dc2626;
+}
+QFrame#metricCard[tone="warning"] QLabel[role="metric-value"] {
+    color: #d97706;
+}
+
+/* === StatusCard === */
+QFrame#statusCard {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QFrame#statusCard QLabel[role="status-card-title"] {
+    font-size: 13px;
+    color: #475569;
+    font-weight: bold;
+}
+QFrame#statusCard QLabel[role="status-card-description"] {
+    font-size: 12px;
+    color: #475569;
+}
+
+/* === RecentActivityPanel === */
+QFrame#recentActivityPanel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QTableWidget#recentActivityTable {
+    border: none;
+    background-color: transparent;
+    gridline-color: #f1f5f9;
+}
+QTableWidget#recentActivityTable::item {
+    padding: 4px 6px;
+}
+
+/* === SearchSummaryPanel === */
+QFrame#searchSummaryPanel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QLabel[role="search-summary-metric"] {
+    font-size: 12px;
+    color: #475569;
+}
+QLabel[role="search-summary-metric-value"] {
+    font-size: 16px;
+    color: #0f172a;
+    font-weight: bold;
+}
+
+/* === QuickActionsPanel === */
+QFrame#quickActionsPanel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+/* === EmptyState === */
+QFrame#emptyState {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QLabel#emptyStateTitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0f172a;
+}
+QLabel#emptyStateMessage {
+    font-size: 12px;
+    color: #475569;
+}
+
+/* === LoadingState === */
+QFrame#loadingState {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+QLabel#loadingStateMessage {
+    font-size: 13px;
+    color: #475569;
+    font-weight: bold;
+}
+QProgressBar#loadingStateBar {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background-color: #f1f5f9;
+    text-align: center;
+    color: #0f172a;
+    min-height: 12px;
+    max-height: 12px;
+}
+QProgressBar#loadingStateBar::chunk {
+    background-color: #2563eb;
+    border-radius: 4px;
+}
+
+/* === ErrorBanner === */
+QFrame#dashboardErrorBanner {
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+}
+QLabel#dashboardErrorBannerText {
+    color: #991b1b;
+    font-weight: bold;
+}
